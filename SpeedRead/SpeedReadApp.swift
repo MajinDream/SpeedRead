@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct SpeedReadApp: App {
+    @StateObject var navigationViewModel = NavigationViewModel()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(navigationViewModel)
         }
     }
 }
