@@ -13,7 +13,7 @@ final class SettingsViewModel: ObservableObject {
     @Published var length = 12.0
     @Published var constrast = 50.0
     @Published var fontSize = 18.0
-    @Published var presentSettings = false
+    @Published var isPresentingSettings = false
     @Published var selectedTheme = ThemeType.darkGray
     @Published var selectedFont = Fonts.sfProDisplay
     @Published var selectedSheet = SelectedSettingsSheet.reading

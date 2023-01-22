@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LibraryView: View {
+struct LibraryTabView: View {
     @EnvironmentObject var navigationViewModel: NavigationViewModel
     @StateObject var libraryViewModel = LibraryViewModel()
     
@@ -62,13 +62,7 @@ struct LibraryView: View {
     }
 }
 
-struct LibraryView_Previews: PreviewProvider {
-    static var previews: some View {
-        LibraryView()
-    }
-}
-
-extension LibraryView {
+extension LibraryTabView {
     var recentReadView: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Recently Read")
@@ -106,3 +100,9 @@ extension LibraryView {
     }
 }
 
+struct LibraryView_Previews: PreviewProvider {
+    static var previews: some View {
+        LibraryTabView()
+            .environmentObject(NavigationViewModel())
+    }
+}

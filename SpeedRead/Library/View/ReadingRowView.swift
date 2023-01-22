@@ -16,8 +16,7 @@ struct ReadingRowView: View {
                 AsyncImageView(iconLink: reading.iconLink)
                     .frame(width: 60, height: 84)
                     .cornerRadius(8)
-                    .padding(.leading, 8)
-                    .padding(.vertical, 8)
+                    .padding(.leading, 12)
                 
                 VStack(alignment: .leading, spacing: 0) {
                     Text(reading.title)
@@ -36,7 +35,7 @@ struct ReadingRowView: View {
                                        pagesTotal: reading.pagesTotal ?? 100)
                 }
                 
-                .padding(.vertical, 13)
+                .padding(.vertical, 12)
                 .padding(.trailing, 20)
             }
             .background(Color("secondary"))

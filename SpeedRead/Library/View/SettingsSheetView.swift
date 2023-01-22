@@ -45,18 +45,15 @@ extension SettingsSheetView {
             
             Spacer()
             
-            Picker(selection: $settingsViewModel.readingMode) {
+            Picker(selection: $settingsViewModel.readingMode, label: Text("Reading Mode")) {
                 ForEach(ReadingMode.allCases) { mode in
                     Text(mode.rawValue).tag(mode)
                 }
-            } label: {
-                Text("Reading Mode")
             }
             .pickerStyle(.segmented)
             .onAppear {
                 UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(named: "primary")
             }
-            .frame(width: 200)
         }
         .padding(.top, 10)
     }

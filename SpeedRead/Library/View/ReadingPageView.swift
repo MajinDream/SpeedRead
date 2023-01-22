@@ -69,14 +69,14 @@ struct ReadingPageView: View {
              
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    settingsViewModel.presentSettings = true
+                    settingsViewModel.isPresentingSettings = true
                 } label: {
                     Image(systemName: "slider.horizontal.3")
                         .font(.system(size: 17, weight: .semibold))
                 }
             }
         }
-        .sheet(isPresented: $settingsViewModel.presentSettings) {
+        .sheet(isPresented: $settingsViewModel.isPresentingSettings) {
             ZStack {
                 settingsViewModel.selectedTheme.backgroundColor.edgesIgnoringSafeArea(.all)
                 switch settingsViewModel.selectedSheet {

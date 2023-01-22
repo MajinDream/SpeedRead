@@ -14,27 +14,19 @@ enum MainTabs: String, Hashable {
     case stats = "Stats"
     case settings = "Settings"
     
-    func getTabName() -> String {
-        return rawValue
-    }
+    var name: String { return rawValue }
 
-    func getTabIconName() -> String {
+    var tabIconName: String {
         switch self {
-        case .exercise:
-            return "brain.head.profile"
-        case .test:
-            return "list.bullet.clipboard"
-        case .library:
-            return "book"
-        case .stats:
-            return "chart.xyaxis.line"
-        case .settings:
-            return "gearshape"
+        case .exercise: return "brain.head.profile"
+        case .test:     return "list.bullet.clipboard"
+        case .library:  return "book"
+        case .stats:    return "chart.xyaxis.line"
+        case .settings: return "gearshape"
         }
     }
 
-    func getTabItem() -> Label<Text, Image> {
-        Label(self.getTabName(),
-              systemImage: self.getTabIconName())
+    var tabItem: Label<Text, Image> {
+        Label(self.name, systemImage: self.tabIconName)
     }
 }

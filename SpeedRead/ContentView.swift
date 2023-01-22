@@ -18,25 +18,25 @@ struct ContentView: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            ExerciseView()
+            ExerciseTabView()
                 .tag(MainTabs.exercise)
-                .tabItem { MainTabs.exercise.getTabItem() }
+                .tabItem { MainTabs.exercise.tabItem }
             
             TestView()
                 .tag(MainTabs.test)
-                .tabItem { MainTabs.test.getTabItem() }
+                .tabItem { MainTabs.test.tabItem }
             
-            LibraryView()
+            LibraryTabView()
                 .tag(MainTabs.library)
-                .tabItem { MainTabs.library.getTabItem() }
+                .tabItem { MainTabs.library.tabItem }
             
             StatsView()
                 .tag(MainTabs.stats)
-                .tabItem { MainTabs.stats.getTabItem() }
+                .tabItem { MainTabs.stats.tabItem }
             
             SettingsView()
                 .tag(MainTabs.settings)
-                .tabItem { MainTabs.settings.getTabItem() }
+                .tabItem { MainTabs.settings.tabItem }
         }
     }
 }
@@ -44,5 +44,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(NavigationViewModel())
     }
 }
