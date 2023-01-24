@@ -12,10 +12,16 @@ struct SchulteView: View {
     
     var body: some View {
         Grid {
-            ForEach(0..<schulteViewModel.gridSize, id: \.self) { row in
+            ForEach(schulteViewModel.cells, id: \.self) { row in
                 GridRow {
-                    ForEach(0..<schulteViewModel.gridSize, id: \.self) { col in
-                        SchulteCellView(number: row + col)
+                    ForEach(row, id: \.self) { cell in
+                        SchulteCellView(cell: cell)
+                            .onTapGesture {
+                                if cell.correctCell(schulteViewModel.currentNumber) {
+                                    schulteViewModel.currentNumber += 1
+                                    schulteViewModel.shuffleCells()
+                                }
+                            }
                     }
                 }
             }
@@ -25,45 +31,59 @@ struct SchulteView: View {
         .background(Color("background"))
         .navigationTitle("Schulte Table")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    schulteViewModel.isPresentingSettings = true
-                } label: {
-                    Image(systemName: "slider.horizontal.3")
-                        .font(.system(size: 17, weight: .semibold))
-                }
-            }
-        }
+        .toolbar { toolBarView }
+        .overlay { redDotView }
         .sheet(isPresented: $schulteViewModel.isPresentingSettings) {
-            ZStack {
-                Color("background").edgesIgnoringSafeArea(.all)
-                SchulteSettingsView(viewModel: schulteViewModel)
-                    .presentationDetents([.fraction(0.3)])
-            }
-            .foregroundColor(Color.accentColor)
+            settingsSheetView
         }
-        .overlay {
-            Circle()
-                .stroke(lineWidth: 2)
-                .background(Circle().fill(schulteViewModel.isShowingDot ? .white : .clear))
-                .foregroundColor(schulteViewModel.isShowingDot ? .red : .clear)
-                .frame(width: 8, height: 8)
+        .onChange(of: schulteViewModel.gridSize) { _ in
+            schulteViewModel.populateNumbers()
         }
     }
 }
 
+extension SchulteView {
+    var toolBarView: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button {
+                schulteViewModel.isPresentingSettings = true
+            } label: {
+                Image(systemName: "slider.horizontal.3")
+                    .font(.system(size: 17, weight: .semibold))
+            }
+        }
+    }
+
+    var settingsSheetView: some View {
+        ZStack {
+            Color("background").edgesIgnoringSafeArea(.all)
+            SchulteSettingsView(viewModel: schulteViewModel)
+                .presentationDetents([.fraction(0.3)])
+        }
+        .foregroundColor(Color.accentColor)
+    }
+
+    var redDotView: some View {
+        Circle()
+            .stroke(lineWidth: 2)
+            .background(Circle().fill(schulteViewModel.isShowingDot ? .white : .clear))
+            .foregroundColor(schulteViewModel.isShowingDot ? .red : .clear)
+            .frame(width: 8, height: 8)
+    }
+}
+
 struct SchulteCellView: View {
-    let number: Int
+    @ObservedObject var cell: SchulteCell
     
     var body: some View {
         RoundedRectangle(cornerRadius: 8)
             .aspectRatio(contentMode: .fit)
             .overlay {
-                Text(number.formatted())
+                Text(cell.number.formatted())
                     .foregroundColor(.black)
                     .font(.system(size: 35, weight: .bold))
             }
+            .foregroundColor(cell.isCorrect ? .green : .white)
     }
 }
 
