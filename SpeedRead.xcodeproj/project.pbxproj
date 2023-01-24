@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		8707FD0B2918E73F00AA62AD /* ReadingPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8707FD0A2918E73F00AA62AD /* ReadingPageView.swift */; };
 		8707FD0D2918F37800AA62AD /* NavigationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8707FD0C2918F37800AA62AD /* NavigationViewModel.swift */; };
+		8709BDD829804E9900D3BF00 /* MnemonicsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8709BDD729804E9900D3BF00 /* MnemonicsViewModel.swift */; };
+		8709BDDA2980521D00D3BF00 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8709BDD92980521D00D3BF00 /* String+Extensions.swift */; };
 		8719BCFD297D965F00143AD6 /* ExerciseRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8719BCFC297D965F00143AD6 /* ExerciseRowView.swift */; };
 		8719BCFF297D974300143AD6 /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8719BCFE297D974300143AD6 /* Exercise.swift */; };
 		8719BD03297D9DB400143AD6 /* SchulteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8719BD02297D9DB400143AD6 /* SchulteView.swift */; };
@@ -50,6 +52,8 @@
 /* Begin PBXFileReference section */
 		8707FD0A2918E73F00AA62AD /* ReadingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPageView.swift; sourceTree = "<group>"; };
 		8707FD0C2918F37800AA62AD /* NavigationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewModel.swift; sourceTree = "<group>"; };
+		8709BDD729804E9900D3BF00 /* MnemonicsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicsViewModel.swift; sourceTree = "<group>"; };
+		8709BDD92980521D00D3BF00 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		8719BCFC297D965F00143AD6 /* ExerciseRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseRowView.swift; sourceTree = "<group>"; };
 		8719BCFE297D974300143AD6 /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
 		8719BD02297D9DB400143AD6 /* SchulteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchulteView.swift; sourceTree = "<group>"; };
@@ -112,6 +116,7 @@
 		8719BD0D297DB6AC00143AD6 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				8709BDD92980521D00D3BF00 /* String+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -348,6 +353,7 @@
 			children = (
 				87361600297D86E900E15CD5 /* ExerciseViewModel.swift */,
 				8719BD08297DA87E00143AD6 /* SchulteViewModel.swift */,
+				8709BDD729804E9900D3BF00 /* MnemonicsViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -485,6 +491,7 @@
 				87944F812909B1CD0075CB88 /* ReadingRowView.swift in Sources */,
 				87EBB5A528FED0D6000C6B40 /* SpeedReadApp.swift in Sources */,
 				87361603297D899400E15CD5 /* ExercisePageView.swift in Sources */,
+				8709BDD829804E9900D3BF00 /* MnemonicsViewModel.swift in Sources */,
 				87CA6AA12923A91900483F5E /* ThemePickerView.swift in Sources */,
 				87CA6A9D29239C2500483F5E /* ReadingMode.swift in Sources */,
 				872B33872903C4A900C6DD50 /* Reading.swift in Sources */,
@@ -494,6 +501,7 @@
 				8719BD07297D9DC500143AD6 /* MnemonicsView.swift in Sources */,
 				8719BD09297DA87E00143AD6 /* SchulteViewModel.swift in Sources */,
 				8719BCFD297D965F00143AD6 /* ExerciseRowView.swift in Sources */,
+				8709BDDA2980521D00D3BF00 /* String+Extensions.swift in Sources */,
 				8719BD05297D9DBD00143AD6 /* PairMatchView.swift in Sources */,
 				8719BD0B297DB0D400143AD6 /* SchulteSettingsView.swift in Sources */,
 				877FA5332923DD390072C578 /* FontsSheetView.swift in Sources */,

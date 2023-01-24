@@ -9,8 +9,8 @@ import SwiftUI
 
 enum Exercise: String, CaseIterable, Identifiable {
     case schulte
-    case pairMatch
     case mnemonics
+    case pairMatch
 
     var id: String { return self.rawValue }
     

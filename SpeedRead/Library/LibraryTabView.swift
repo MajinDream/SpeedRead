@@ -25,30 +25,8 @@ struct LibraryTabView: View {
             .navigationTitle("Library")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        print("WIP SORT")
-                    } label: {
-                        HStack {
-                            Image(systemName: "line.3.horizontal.decrease.circle")
-                            Text("Sort")
-                        }
-                        .font(.system(size: 17, weight: .semibold))
-                    }
-
-                }
-                 
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        print("WIP ADD")
-                    } label: {
-                        HStack {
-                            Text("Add")
-                            Image(systemName: "plus")
-                        }
-                        .font(.system(size: 17, weight: .semibold))
-                    }
-                }
+                sortToolBarItem
+                addToolBarItem
             }
             .navigationDestination(for: Reading.self) { reading in
                 ReadingPageView(reading: reading)
@@ -95,6 +73,35 @@ extension LibraryTabView {
                     }
                 }
                 .shadow(radius: 4, y: 4)
+            }
+        }
+    }
+    
+    var sortToolBarItem: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarLeading) {
+            Button {
+                print("WIP SORT")
+            } label: {
+                HStack {
+                    Image(systemName: "line.3.horizontal.decrease.circle")
+                    Text("Sort")
+                }
+                .font(.system(size: 17, weight: .semibold))
+            }
+
+        }
+    }
+
+    var addToolBarItem: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button {
+                print("WIP ADD")
+            } label: {
+                HStack {
+                    Text("Add")
+                    Image(systemName: "plus")
+                }
+                .font(.system(size: 17, weight: .semibold))
             }
         }
     }

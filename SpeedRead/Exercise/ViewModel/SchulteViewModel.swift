@@ -42,12 +42,12 @@ final class SchulteViewModel: ObservableObject {
     }
     
     /*
-     TODO: 1) Arrange Numbers
-            2) Refactor Colors
+     TODO:
+     2) Refactor Colors
      3) Refactor Constants
      4) Refactor Network Layer
-     5) refactor ToolBar
-     6) refactor big views
+     5) Refactor TabBar
+     6) Refactor big views
      */
 }
 
