@@ -22,7 +22,7 @@ struct ReadingProgressBar: View {
                 GeometryReader { geometry in
                     RoundedRectangle(cornerRadius: 4)
                         .frame(width: geometry.size.width * percentage)
-                        .foregroundColor(Color("helper"))
+                        .foregroundColor(.srHelper)
                 }
             }
             .frame(height: 6)
@@ -33,7 +33,7 @@ struct ReadingProgressBar: View {
                 Text("\(pagesLeft) pages")
             }
             .font(.system(size: 10, weight: .semibold))
-            .foregroundColor(Color("helper"))
+            .foregroundColor(.srHelper)
         }
     }
 }

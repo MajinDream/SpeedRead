@@ -8,34 +8,22 @@
 import SwiftUI
 
 struct ExerciseTabView: View {
-    @EnvironmentObject private var navigationViewModel: NavigationViewModel
     @StateObject private var exerciseViewModel = ExerciseViewModel()
     
     var body: some View {
-        NavigationStack(path: $navigationViewModel.path){
-            VStack {
-                pagePickerView
-                exerciseViewModel.selectedPage.getPageView(viewModel: exerciseViewModel)
-                Spacer()
-            }
-            .navigationDestination(for: Reading.self) { reading in
-                ReadingPageView(reading: reading)
-            }
-            .background(Color("background"))
-            .navigationTitle("Exercise")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                sortToolBarItem
-                addToolBarItem
-            }
-            .navigationDestination(for: Exercise.self) { exercise in
-                exercise.getExerciseView()
-            }
-            .task {
-//                if libraryViewModel.readings.isEmpty {
-//                    await libraryViewModel.fetchLibrary()
-//                }
-            }
+        VStack {
+            pagePickerView
+            exerciseViewModel.selectedPage.getPageView(viewModel: exerciseViewModel)
+            Spacer()
+        }
+        .background(Color.srBackground)
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            sortToolBarItem
+            addToolBarItem
+        }
+        .task {
+            exerciseViewModel.fetchArticles()
         }
     }
 }

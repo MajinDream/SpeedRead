@@ -17,8 +17,8 @@ enum ThemeType: String, CaseIterable, Identifiable {
     
     var backgroundColor: Color {
         switch self {
-        case .darkGray:     return Color("darkGray")
-        case .lightGray:    return Color("lightGray")
+        case .darkGray:     return Color.srDarkGray
+        case .lightGray:    return Color.srLightGray
         case .white:        return Color.white
         case .black:        return Color.black
         }
@@ -26,8 +26,8 @@ enum ThemeType: String, CaseIterable, Identifiable {
 
     var textColor: Color {
         switch self {
-        case .darkGray:     return Color("lightGray")
-        case .lightGray:    return Color("darkGray")
+        case .darkGray:     return Color.srLightGray
+        case .lightGray:    return Color.srDarkGray
         case .white:        return Color.black
         case .black:        return Color.white
         }

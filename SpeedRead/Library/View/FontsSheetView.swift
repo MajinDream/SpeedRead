@@ -27,7 +27,7 @@ struct FontsSheetView: View {
                 Text("Fonts")
             }
             .font(.system(size: 20, weight: .semibold))
-            .foregroundColor(Color("primary"))
+            .foregroundColor(.srPrimary)
             .padding(26)
             
             

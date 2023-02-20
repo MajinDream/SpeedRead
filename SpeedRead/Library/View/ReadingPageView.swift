@@ -24,32 +24,9 @@ struct ReadingPageView: View {
     var body: some View {
         VStack {
             if settingsViewModel.readingMode == .highlight {
-                ScrollView(showsIndicators: false) {
-                    Text(words[...(cur-1)].joined(separator: " "))
-                        .foregroundColor(settingsViewModel.selectedTheme.textColor.opacity(1 - (settingsViewModel.constrast / 100)))
-                    +
-                    Text(" \(words[cur]) ")
-                        .foregroundColor(settingsViewModel.selectedTheme.textColor)
-                    +
-                    Text(words[(cur+1)...].joined(separator: " "))
-                        .foregroundColor(settingsViewModel.selectedTheme.textColor.opacity(1 - (settingsViewModel.constrast / 100)))
-                }
-                .font(.system(size: settingsViewModel.fontSize, weight: .regular))
-                .lineSpacing(5)
-                .multilineTextAlignment(.leading)
-                .onReceive(timer) { _ in
-                    cur += 1
-                }
-                .padding(.horizontal, 25)
-                .padding(.top, 10)
+                highlightingView
             } else {
-                Text(words[cur])
-                    .font(.system(size: settingsViewModel.fontSize, weight: .regular))
-                    .foregroundColor(settingsViewModel.selectedTheme.textColor)
-                    .onReceive(timer) { _ in
-                        cur += 1
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                singleWordView
             }
         }
         .background(settingsViewModel.selectedTheme.backgroundColor)
@@ -57,41 +34,85 @@ struct ReadingPageView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    navigationViewModel.goBack()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .semibold))
-                }
-
-            }
-             
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    settingsViewModel.isPresentingSettings = true
-                } label: {
-                    Image(systemName: "slider.horizontal.3")
-                        .font(.system(size: 17, weight: .semibold))
-                }
-            }
+            backToolBarItem
+            settingsToolBarItem
         }
         .sheet(isPresented: $settingsViewModel.isPresentingSettings) {
-            ZStack {
-                settingsViewModel.selectedTheme.backgroundColor.edgesIgnoringSafeArea(.all)
-                switch settingsViewModel.selectedSheet {
-                case .reading:
-                    SettingsSheetView()
-                        .environmentObject(settingsViewModel)
-                        .presentationDetents([.fraction(0.8)])
-                case .font:
-                    FontsSheetView()
-                        .environmentObject(settingsViewModel)
-                        .presentationDetents([.fraction(0.8)])
-                }
-            }
-            .foregroundColor(settingsViewModel.selectedTheme.textColor)
+            settingsSheetSelector
         }
+    }
+}
+
+extension ReadingPageView {
+    var highlightingView: some View {
+        ScrollView(showsIndicators: false) {
+            Text(words[...(cur-1)].joined(separator: " "))
+                .foregroundColor(settingsViewModel.selectedTheme.textColor.opacity(1 - (settingsViewModel.constrast / 100)))
+            +
+            Text(" \(words[cur]) ")
+                .foregroundColor(settingsViewModel.selectedTheme.textColor)
+            +
+            Text(words[(cur+1)...].joined(separator: " "))
+                .foregroundColor(settingsViewModel.selectedTheme.textColor.opacity(1 - (settingsViewModel.constrast / 100)))
+        }
+        .font(.system(size: settingsViewModel.fontSize, weight: .regular))
+        .lineSpacing(5)
+        .multilineTextAlignment(.leading)
+        .onReceive(timer) { _ in
+            cur += 1
+        }
+        .padding(.horizontal, 25)
+        .padding(.top, 10)
+    }
+    
+    var singleWordView: some View {
+        Text(words[cur])
+            .font(.system(size: settingsViewModel.fontSize, weight: .regular))
+            .foregroundColor(settingsViewModel.selectedTheme.textColor)
+            .onReceive(timer) { _ in
+                cur += 1
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    var backToolBarItem: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarLeading) {
+            Button {
+                navigationViewModel.goBack()
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 17, weight: .semibold))
+            }
+
+        }
+    }
+    
+    var settingsToolBarItem: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button {
+                settingsViewModel.isPresentingSettings = true
+            } label: {
+                Image(systemName: "slider.horizontal.3")
+                    .font(.system(size: 17, weight: .semibold))
+            }
+        }
+    }
+
+    var settingsSheetSelector: some View {
+        ZStack {
+            settingsViewModel.selectedTheme.backgroundColor.edgesIgnoringSafeArea(.all)
+            switch settingsViewModel.selectedSheet {
+            case .reading:
+                SettingsSheetView()
+                    .environmentObject(settingsViewModel)
+                    .presentationDetents([.fraction(0.8)])
+            case .font:
+                FontsSheetView()
+                    .environmentObject(settingsViewModel)
+                    .presentationDetents([.fraction(0.8)])
+            }
+        }
+        .foregroundColor(settingsViewModel.selectedTheme.textColor)
     }
 }
 

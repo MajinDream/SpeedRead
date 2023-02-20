@@ -11,7 +11,7 @@ struct RecentReadIconView: View {
     let reading: Reading
     
     var body: some View {
-        NavigationLink(value: reading) {
+        NavigationLink(value: Route.reading(reading)) {
             AsyncImageView(iconLink: reading.iconLink)
                 .frame(width: 130, height: 130)
                 .cornerRadius(12)

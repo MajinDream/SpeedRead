@@ -11,7 +11,7 @@ struct ReadingRowView: View {
     let reading: Reading
     
     var body: some View {
-        NavigationLink(value: reading) {
+        NavigationLink(value: Route.reading(reading)) {
             HStack(spacing: 14) {
                 AsyncImageView(iconLink: reading.iconLink)
                     .frame(width: 60, height: 84)
@@ -38,7 +38,7 @@ struct ReadingRowView: View {
                 .padding(.vertical, 12)
                 .padding(.trailing, 20)
             }
-            .background(Color("secondary"))
+            .background(Color.srSecondary)
             .cornerRadius(12)
         }
     }

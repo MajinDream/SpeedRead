@@ -13,6 +13,7 @@ final class SchulteViewModel: ObservableObject {
     @Published var isShowingDot = false
     @Published var isShuffle = false
     @Published var isPresentingSettings = false
+    @Published var isWon = false
     @Published var cells = [[SchulteCell]]()
     private var numbers = [Int]()
     
@@ -23,6 +24,7 @@ final class SchulteViewModel: ObservableObject {
     func populateNumbers() {
         numbers = Array(1...gridSize*gridSize).shuffled()
         cells.removeAll()
+        currentNumber = 1
         var i = 0
         for _ in 0..<gridSize {
             var row = [SchulteCell]()
@@ -40,15 +42,13 @@ final class SchulteViewModel: ObservableObject {
         guard isShuffle else { return }
         cells.shuffle()
     }
-    
-    /*
-     TODO:
-     2) Refactor Colors
-     3) Refactor Constants
-     4) Refactor Network Layer
-     5) Refactor TabBar
-     6) Refactor big views
-     */
+
+    func incrementNumber() {
+        currentNumber += 1
+        if currentNumber > numbers.count {
+            isWon = true
+        }
+    }
 }
 
 final class SchulteCell: ObservableObject, Hashable {

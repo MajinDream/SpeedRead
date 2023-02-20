@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var navigationViewModel: NavigationViewModel
     @State private var selectedTab = MainTabs.library
     
     init() {
@@ -17,26 +18,32 @@ struct ContentView: View {
     }
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            ExerciseTabView()
-                .tag(MainTabs.exercise)
-                .tabItem { MainTabs.exercise.tabItem }
-            
-            TestView()
-                .tag(MainTabs.test)
-                .tabItem { MainTabs.test.tabItem }
-            
-            LibraryTabView()
-                .tag(MainTabs.library)
-                .tabItem { MainTabs.library.tabItem }
-            
-            StatsView()
-                .tag(MainTabs.stats)
-                .tabItem { MainTabs.stats.tabItem }
-            
-            SettingsView()
-                .tag(MainTabs.settings)
-                .tabItem { MainTabs.settings.tabItem }
+        NavigationStack(path: $navigationViewModel.path) {
+            TabView(selection: $selectedTab) {
+                ExerciseTabView()
+                    .tag(MainTabs.exercise)
+                    .tabItem { MainTabs.exercise.tabItem }
+                
+                MeasureTabView()
+                    .tag(MainTabs.test)
+                    .tabItem { MainTabs.test.tabItem }
+                
+                LibraryTabView()
+                    .tag(MainTabs.library)
+                    .tabItem { MainTabs.library.tabItem }
+                
+                StatsView()
+                    .tag(MainTabs.stats)
+                    .tabItem { MainTabs.stats.tabItem }
+                
+                SettingsView()
+                    .tag(MainTabs.settings)
+                    .tabItem { MainTabs.settings.tabItem }
+            }
+            .navigationTitle(selectedTab.name)
+            .navigationDestination(for: Route.self) { route in
+                route.destinationView
+            }
         }
     }
 }

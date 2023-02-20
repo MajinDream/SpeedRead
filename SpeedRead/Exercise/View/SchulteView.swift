@@ -18,7 +18,7 @@ struct SchulteView: View {
                         SchulteCellView(cell: cell)
                             .onTapGesture {
                                 if cell.correctCell(schulteViewModel.currentNumber) {
-                                    schulteViewModel.currentNumber += 1
+                                    schulteViewModel.incrementNumber()
                                     schulteViewModel.shuffleCells()
                                 }
                             }
@@ -28,10 +28,21 @@ struct SchulteView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal, 10)
-        .background(Color("background"))
+        .background(Color.srBackground)
         .navigationTitle("Schulte Table")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar { toolBarView }
+        .alert("You Won!", isPresented: $schulteViewModel.isWon) {
+            Button("Cancel", role: .cancel) {}
+            Button("Try Again?") {
+                schulteViewModel.populateNumbers()
+            }
+        } message: {
+            Text("Good job, You finished the game.")
+        }
+        .toolbar {
+            restartToolBarView
+            settingsToolBarView
+        }
         .overlay { redDotView }
         .sheet(isPresented: $schulteViewModel.isPresentingSettings) {
             settingsSheetView
@@ -43,7 +54,18 @@ struct SchulteView: View {
 }
 
 extension SchulteView {
-    var toolBarView: some ToolbarContent {
+    var restartToolBarView: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button {
+                schulteViewModel.populateNumbers()
+            } label: {
+                Image(systemName: "restart")
+                    .font(.system(size: 17, weight: .semibold))
+            }
+        }
+    }
+    
+    var settingsToolBarView: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button {
                 schulteViewModel.isPresentingSettings = true
@@ -56,7 +78,7 @@ extension SchulteView {
 
     var settingsSheetView: some View {
         ZStack {
-            Color("background").edgesIgnoringSafeArea(.all)
+            Color.srBackground.edgesIgnoringSafeArea(.all)
             SchulteSettingsView(viewModel: schulteViewModel)
                 .presentationDetents([.fraction(0.3)])
         }

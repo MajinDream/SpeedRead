@@ -8,33 +8,23 @@
 import SwiftUI
 
 struct LibraryTabView: View {
-    @EnvironmentObject var navigationViewModel: NavigationViewModel
     @StateObject var libraryViewModel = LibraryViewModel()
     
     var body: some View {
-        NavigationStack(path: $navigationViewModel.path){
-            VStack {
-                recentReadView
-                readingListView
-                //Spacer()
-            }
-            .navigationDestination(for: Reading.self) { reading in
-                ReadingPageView(reading: reading)
-            }
-            .background(Color("background"))
-            .navigationTitle("Library")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                sortToolBarItem
-                addToolBarItem
-            }
-            .navigationDestination(for: Reading.self) { reading in
-                ReadingPageView(reading: reading)
-            }
-            .task {
-                if libraryViewModel.readings.isEmpty {
-                    await libraryViewModel.fetchLibrary()
-                }
+        VStack {
+            recentReadView
+            readingListView
+            //Spacer()
+        }
+        .background(Color.srBackground)
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            sortToolBarItem
+            addToolBarItem
+        }
+        .task {
+            if libraryViewModel.readings.isEmpty {
+                await libraryViewModel.fetchLibrary()
             }
         }
     }

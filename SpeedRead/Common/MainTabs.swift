@@ -8,10 +8,10 @@
 import SwiftUI
 
 enum MainTabs: String, Hashable {
-    case exercise = "Exercise"
-    case test = "Test"
+    case exercise = "Training"
+    case test = "Measuring"
     case library = "Library"
-    case stats = "Stats"
+    case stats = "Statistics"
     case settings = "Settings"
     
     var name: String { return rawValue }
