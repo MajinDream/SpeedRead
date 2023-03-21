@@ -32,7 +32,7 @@ struct ContentView: View {
                     .tag(MainTabs.library)
                     .tabItem { MainTabs.library.tabItem }
                 
-                StatsView()
+                StatsTabView()
                     .tag(MainTabs.stats)
                     .tabItem { MainTabs.stats.tabItem }
                 

@@ -31,6 +31,6 @@ struct Reading: Codable, Hashable, Identifiable {
     }
     
     static var example: Reading {
-        Reading(id: "a", title: "Book of Mystery", subtitle: "", author: "Unknwown Micheal", type: "Book", iconLink: "https://m.media-amazon.com/images/I/41y2DZeaWlL._AC_SY780_.jpg", pagesRead: 120, pagesTotal: 500, url: "")
+        Reading(id: "a", title: "Book of Mystery", subtitle: "", author: "Unknwown Micheal", type: "Book", iconLink: "https://m.media-amazon.com/images/I/41y2DZeaWlL._AC_SY780_.jpg", pagesRead: 120, pagesTotal: 500, url: "https://www.gutenberg.org/cache/epub/70204/pg70204.txt")
     }
 }

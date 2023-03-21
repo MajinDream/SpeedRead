@@ -28,7 +28,7 @@ enum SettingsSliderType: String {
     
     var valueRange: ClosedRange<Double> {
         switch self {
-        case .speed:    return 1...1000
+        case .speed:    return 1...500
         case .length:   return 1...50
         case .contrast: return 0...100
         case .fontSize: return 10...30

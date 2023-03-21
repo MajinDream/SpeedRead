@@ -23,6 +23,7 @@ struct LibraryTabView: View {
             addToolBarItem
         }
         .task {
+            await libraryViewModel.cacheReadings()
             if libraryViewModel.readings.isEmpty {
                 await libraryViewModel.fetchLibrary()
             }

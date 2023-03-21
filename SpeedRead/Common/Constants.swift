@@ -8,5 +8,5 @@
 import Foundation
 
 enum Constants: String {
-    case baseUrl = "https://speed-reading-app-backend.herokuapp.com/api"
+    case baseURL = "http://13.115.20.106/api"
 }
