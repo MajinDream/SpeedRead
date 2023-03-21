@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import OrderedCollections
 
 struct ReadingPageView: View {
     @EnvironmentObject var navigationViewModel: NavigationViewModel
@@ -16,16 +17,17 @@ struct ReadingPageView: View {
     @State var timer: Publishers.Autoconnect<Timer.TimerPublisher>
     
     let reading: Reading
-    let readingPages: [Int: [String]]?
+    let readingPages: OrderedDictionary<Int, [String]>?
     @State var words: [String] = [""]
     @State var currentPage = 0
     @State var currentPosition = 0
     
     @State var isStop = true
+    @State var isPresentingPagePicker = false
     
     init(reading: Reading) {
         self.reading = reading
-        self.readingPages = [Int: [String]].load(on: .cachesDirectory, fromFileName: "\(reading.id).txt")
+        self.readingPages = OrderedDictionary<Int, [String]>.load(on: .cachesDirectory, fromFileName: "\(reading.id).txt")
         self.timer = Timer.publish(every: 1000, on: .main, in: .common).autoconnect()
     }
     
@@ -47,14 +49,24 @@ struct ReadingPageView: View {
             self.currentPage = page
             self.currentPosition = position
             self.words = Array(readingPages?[currentPage] ?? [])
+            print("DEBUG: \(words)")
             stopTimer()
         }
         .toolbar {
             backToolBarItem
+            choosePageToolBarItem
             settingsToolBarItem
         }
         .sheet(isPresented: $settingsViewModel.isPresentingSettings) {
             settingsSheetSelector
+        }
+        .sheet(isPresented: $isPresentingPagePicker) {
+            currentPagePicker
+                .onChange(of: currentPage) { newValue in
+                    words = Array(readingPages?[currentPage] ?? [])
+                    currentPosition = 0
+                    print(words)
+                }
         }
     }
     
@@ -106,6 +118,18 @@ extension ReadingPageView {
         }
     }
     
+    var choosePageToolBarItem: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button {
+                self.isPresentingPagePicker = true
+                stopTimer()
+            } label: {
+                Image(systemName: "plus")
+                    .font(.system(size: 17, weight: .semibold))
+            }
+        }
+    }
+    
     var settingsToolBarItem: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button {
@@ -115,6 +139,20 @@ extension ReadingPageView {
                 Image(systemName: "slider.horizontal.3")
                     .font(.system(size: 17, weight: .semibold))
             }
+        }
+    }
+    
+    @ViewBuilder
+    var currentPagePicker: some View {
+        if let keys = readingPages?.keys.map { Int($0) } {
+            Picker("Page", selection: $currentPage) {
+                ForEach(keys, id: \.self) { key in
+                    Text("Page #\(key)").tag(key)
+                }
+            }
+            .presentationDetents([.fraction(0.3)])
+        } else {
+            Text("Error getting reading pages")
         }
     }
 
@@ -154,7 +192,7 @@ extension ReadingPageView {
     
     func updateTimer() {
         timer = Timer.publish(
-            every: 60 / settingsViewModel.speed,
+            every: 60.0 / settingsViewModel.speed,
             on: .main,
             in: .common
         ).autoconnect()

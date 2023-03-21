@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import OrderedCollections
 
 struct LibraryResponse: Codable {
     let total: Int?
@@ -53,10 +54,17 @@ final class LibraryViewModel: ObservableObject {
                 .sink(
                     receiveCompletion: NetworkingManager.handleCompletion,
                     receiveValue: { text in
-                        let words = text.components(separatedBy: .whitespaces)
+                        let clearedText = text
+                            .replacingOccurrences(of: "(\r\n){3,}", with: "\r\n ", options: .regularExpression)
+                            .replacingOccurrences(of: "\r\n", with: "\r\n ", options: .regularExpression)
+                        var words = clearedText.components(separatedBy: .whitespaces)
+                        words = words
+                            .filter({($0.trimmingCharacters(in: CharacterSet.whitespaces)).count > 0})
+                            
+    
                         let wordsPerPage = 200
                         
-                        var pages: [Int: [String]] = [:]
+                        var pages: OrderedDictionary<Int, [String]> = [:]
                         let maxPages = words.count / wordsPerPage
 
                         for i in 0...maxPages-1 {

@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import OrderedCollections
 
-extension Dictionary where Key: Codable, Value: Codable {
+extension OrderedDictionary where Key: Codable, Value: Codable {
     static func load (
         on directory: FileManager.SearchPathDirectory,
         fromFileName fileName: String,
         using fileManager: FileManager = .default
-    ) -> [Key: Value]? {
+    ) -> OrderedDictionary<Key, Value>? {
         let fileURL = Self.getDocumentsURL(
             on: directory,
             withName: fileName,
@@ -23,7 +24,7 @@ extension Dictionary where Key: Codable, Value: Codable {
         }
         
         do {
-            return try JSONDecoder().decode([Key: Value].self, from: data)
+            return try JSONDecoder().decode(OrderedDictionary<Key, Value>.self, from: data)
         } catch(let error) {
             print(error)
             return nil

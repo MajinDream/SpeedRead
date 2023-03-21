@@ -21,7 +21,7 @@ struct SettingsSheetView: View {
         VStack(spacing: 32) {
             readingModeView
             speedSliderView
-            lengthSliderView
+//            lengthSliderView
             contrastSliderView
             themePickerView
             fontChooseView
