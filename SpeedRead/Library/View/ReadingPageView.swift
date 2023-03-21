@@ -49,7 +49,6 @@ struct ReadingPageView: View {
             self.currentPage = page
             self.currentPosition = position
             self.words = Array(readingPages?[currentPage] ?? [])
-            print("DEBUG: \(words)")
             stopTimer()
         }
         .toolbar {
@@ -65,7 +64,6 @@ struct ReadingPageView: View {
                 .onChange(of: currentPage) { newValue in
                     words = Array(readingPages?[currentPage] ?? [])
                     currentPosition = 0
-                    print(words)
                 }
         }
     }
@@ -124,7 +122,7 @@ extension ReadingPageView {
                 self.isPresentingPagePicker = true
                 stopTimer()
             } label: {
-                Image(systemName: "plus")
+                Image(systemName: "number.square")
                     .font(.system(size: 17, weight: .semibold))
             }
         }
@@ -150,7 +148,7 @@ extension ReadingPageView {
                     Text("Page #\(key)").tag(key)
                 }
             }
-            .presentationDetents([.fraction(0.3)])
+            .presentationDetents([.fraction(0.15)])
         } else {
             Text("Error getting reading pages")
         }
