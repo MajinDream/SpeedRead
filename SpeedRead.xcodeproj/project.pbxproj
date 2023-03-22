@@ -52,7 +52,7 @@
 		87AE639E2987EF0A00BFBBDA /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AE639D2987EF0A00BFBBDA /* Article.swift */; };
 		87AE63A02987F71B00BFBBDA /* TipRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AE639F2987F71B00BFBBDA /* TipRowView.swift */; };
 		87AE63A22987F82800BFBBDA /* ArticlePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AE63A12987F82800BFBBDA /* ArticlePageView.swift */; };
-		87CA6A9A292394E000483F5E /* SettingsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87CA6A99292394E000483F5E /* SettingsSheetView.swift */; };
+		87CA6A9A292394E000483F5E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87CA6A99292394E000483F5E /* SettingsView.swift */; };
 		87CA6A9D29239C2500483F5E /* ReadingMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87CA6A9C29239C2500483F5E /* ReadingMode.swift */; };
 		87CA6A9F29239F1C00483F5E /* SettingsSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87CA6A9E29239F1C00483F5E /* SettingsSliderView.swift */; };
 		87CA6AA12923A91900483F5E /* ThemePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87CA6AA02923A91900483F5E /* ThemePickerView.swift */; };
@@ -70,7 +70,7 @@
 		87EBB5D428FED40E000C6B40 /* MeasureTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87EBB5D328FED40E000C6B40 /* MeasureTabView.swift */; };
 		87EBB5D628FED42B000C6B40 /* LibraryTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87EBB5D528FED42B000C6B40 /* LibraryTabView.swift */; };
 		87EBB5D828FED43E000C6B40 /* StatsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87EBB5D728FED43E000C6B40 /* StatsTabView.swift */; };
-		87EBB5DA28FED46F000C6B40 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87EBB5D928FED46F000C6B40 /* SettingsView.swift */; };
+		87EBB5DA28FED46F000C6B40 /* SettingsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87EBB5D928FED46F000C6B40 /* SettingsTabView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -119,7 +119,7 @@
 		87AE639D2987EF0A00BFBBDA /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		87AE639F2987F71B00BFBBDA /* TipRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipRowView.swift; sourceTree = "<group>"; };
 		87AE63A12987F82800BFBBDA /* ArticlePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlePageView.swift; sourceTree = "<group>"; };
-		87CA6A99292394E000483F5E /* SettingsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheetView.swift; sourceTree = "<group>"; };
+		87CA6A99292394E000483F5E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		87CA6A9C29239C2500483F5E /* ReadingMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingMode.swift; sourceTree = "<group>"; };
 		87CA6A9E29239F1C00483F5E /* SettingsSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSliderView.swift; sourceTree = "<group>"; };
 		87CA6AA02923A91900483F5E /* ThemePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePickerView.swift; sourceTree = "<group>"; };
@@ -137,7 +137,7 @@
 		87EBB5D328FED40E000C6B40 /* MeasureTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureTabView.swift; sourceTree = "<group>"; };
 		87EBB5D528FED42B000C6B40 /* LibraryTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTabView.swift; sourceTree = "<group>"; };
 		87EBB5D728FED43E000C6B40 /* StatsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsTabView.swift; sourceTree = "<group>"; };
-		87EBB5D928FED46F000C6B40 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		87EBB5D928FED46F000C6B40 /* SettingsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,7 +269,7 @@
 		87EBB5B328FED147000C6B40 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				87EBB5D928FED46F000C6B40 /* SettingsView.swift */,
+				87EBB5D928FED46F000C6B40 /* SettingsTabView.swift */,
 				87EBB5BD28FED1C3000C6B40 /* Model */,
 				87EBB5BC28FED18E000C6B40 /* View */,
 				87EBB5BB28FED18A000C6B40 /* ViewModel */,
@@ -379,7 +379,7 @@
 				872B33882903C6B900C6DD50 /* RecentReadIconView.swift */,
 				87944F802909B1CD0075CB88 /* ReadingRowView.swift */,
 				8707FD0A2918E73F00AA62AD /* ReadingPageView.swift */,
-				87CA6A99292394E000483F5E /* SettingsSheetView.swift */,
+				87CA6A99292394E000483F5E /* SettingsView.swift */,
 				877FA5322923DD390072C578 /* FontsSheetView.swift */,
 				87CA6A9E29239F1C00483F5E /* SettingsSliderView.swift */,
 				87CA6AA02923A91900483F5E /* ThemePickerView.swift */,
@@ -565,7 +565,7 @@
 				87EBB5D628FED42B000C6B40 /* LibraryTabView.swift in Sources */,
 				87EBB5D428FED40E000C6B40 /* MeasureTabView.swift in Sources */,
 				87EBB5CE28FED39B000C6B40 /* MainTabs.swift in Sources */,
-				87EBB5DA28FED46F000C6B40 /* SettingsView.swift in Sources */,
+				87EBB5DA28FED46F000C6B40 /* SettingsTabView.swift in Sources */,
 				87EBB5CA28FED263000C6B40 /* Hacks.swift in Sources */,
 				87234BDA2924A24800336D58 /* LibraryViewModel.swift in Sources */,
 				877FA5312923DBC20072C578 /* Fonts.swift in Sources */,
@@ -577,7 +577,7 @@
 				8788CE7529990F3B003EE1A3 /* MeasureTestViewModel.swift in Sources */,
 				8707FD0B2918E73F00AA62AD /* ReadingPageView.swift in Sources */,
 				87EBB5A728FED0D6000C6B40 /* ContentView.swift in Sources */,
-				87CA6A9A292394E000483F5E /* SettingsSheetView.swift in Sources */,
+				87CA6A9A292394E000483F5E /* SettingsView.swift in Sources */,
 				8788CE77299914C3003EE1A3 /* QuestionPageView.swift in Sources */,
 				87944F862909B45D0075CB88 /* ReadingProgressBar.swift in Sources */,
 				87944F812909B1CD0075CB88 /* ReadingRowView.swift in Sources */,

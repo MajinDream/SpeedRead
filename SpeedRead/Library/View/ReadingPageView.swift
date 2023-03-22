@@ -11,7 +11,7 @@ import OrderedCollections
 
 struct ReadingPageView: View {
     @EnvironmentObject var navigationViewModel: NavigationViewModel
-    @StateObject var settingsViewModel = SettingsViewModel()
+    @EnvironmentObject var settingsViewModel: SettingsViewModel
     @StateObject var readingPageViewModel = ReadingPageViewModel()
     
     @State var timer: Publishers.Autoconnect<Timer.TimerPublisher>
@@ -142,7 +142,7 @@ extension ReadingPageView {
     
     @ViewBuilder
     var currentPagePicker: some View {
-        if let keys = readingPages?.keys.map { Int($0) } {
+        if let keys = readingPages?.keys.map({ Int($0) }) {
             Picker("Page", selection: $currentPage) {
                 ForEach(keys, id: \.self) { key in
                     Text("Page #\(key)").tag(key)
@@ -159,7 +159,7 @@ extension ReadingPageView {
             settingsViewModel.selectedTheme.backgroundColor.edgesIgnoringSafeArea(.all)
             switch settingsViewModel.selectedSheet {
             case .reading:
-                SettingsSheetView()
+                SettingsView()
                     .environmentObject(settingsViewModel)
                     .presentationDetents([.fraction(0.8)])
             case .font:

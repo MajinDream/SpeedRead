@@ -17,16 +17,17 @@ struct LibraryTabView: View {
             //Spacer()
         }
         .background(Color.srBackground)
+        .navigationTitle("Library")
         .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            sortToolBarItem
-            addToolBarItem
-        }
+        .toolbar { addToolBarItem }
         .task {
             await libraryViewModel.cacheReadings()
             if libraryViewModel.readings.isEmpty {
                 await libraryViewModel.fetchLibrary()
             }
+        }
+        .sheet(isPresented: $libraryViewModel.isShowingAddBook) {
+            addBookView
         }
     }
 }
@@ -68,30 +69,41 @@ extension LibraryTabView {
         }
     }
     
-    var sortToolBarItem: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarLeading) {
-            Button {
-                print("WIP SORT")
-            } label: {
-                HStack {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                    Text("Sort")
+    var addBookView: some View {
+        
+        
+        VStack(spacing: 10) {
+            Text("Add your book")
+                .padding(.bottom, 12)
+            Group {
+                TextField("Title", text: $libraryViewModel.addedBook.title)
+                TextField("Subtitle", text: $libraryViewModel.addedBook.subtitle)
+                TextField("Author", text: $libraryViewModel.addedBook.author)
+                TextField("Type", text: $libraryViewModel.addedBook.type)
+                TextField("Cover URL", text: $libraryViewModel.addedBook.iconUrl)
+                TextField("Book URL", text: $libraryViewModel.addedBook.url)
+                Button("Add Book") {
+                    print("Added New Book")
+//                    libraryViewModel.addBook
                 }
-                .font(.system(size: 17, weight: .semibold))
             }
-
+            .padding()
+            .background {
+                RoundedRectangle(cornerRadius: 8)
+                    .foregroundColor(Color.srSecondary.opacity(0.2))
+            }
         }
+        .padding(16)
+        .font(.system(size: 20, weight: .semibold))
+        .presentationDetents([.fraction(0.7)])
     }
 
     var addToolBarItem: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Button {
-                print("WIP ADD")
+                libraryViewModel.isShowingAddBook = true
             } label: {
-                HStack {
-                    Text("Add")
-                    Image(systemName: "plus")
-                }
+                Image(systemName: "plus")
                 .font(.system(size: 17, weight: .semibold))
             }
         }

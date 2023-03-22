@@ -7,7 +7,9 @@
 
 import SwiftUI
 
-enum MainTabs: String, Hashable {
+enum MainTabs: String, Hashable, CaseIterable, Identifiable {
+    var id: String { return rawValue }
+    
     case exercise = "Training"
     case test = "Measuring"
     case library = "Library"
@@ -23,6 +25,17 @@ enum MainTabs: String, Hashable {
         case .library:  return "book"
         case .stats:    return "chart.xyaxis.line"
         case .settings: return "gearshape"
+        }
+    }
+    
+    @ViewBuilder
+    var tabView: some View {
+        switch self {
+        case .exercise:     ExerciseTabView()
+        case .test:         MeasureTabView()
+        case .library:      LibraryTabView()
+        case .stats:        StatsTabView()
+        case .settings:     StatsTabView()
         }
     }
 

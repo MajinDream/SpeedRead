@@ -14,8 +14,21 @@ struct LibraryResponse: Codable {
     let books: [Reading]?
 }
 
+struct NewBook: Codable {
+    var title: String = ""
+    var subtitle: String = ""
+    var author: String = ""
+    var type: String = ""
+    var iconUrl: String = ""
+    var url: String = ""
+}
+
 final class LibraryViewModel: ObservableObject {
     @Published var readings = [Reading.example] // change
+    
+    @Published var isShowingAddBook = false
+    @Published var addedBook = NewBook()
+    
     var librarySubsription: AnyCancellable?
     var readingFetchSubsciption: AnyCancellable?
     

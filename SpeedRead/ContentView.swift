@@ -18,31 +18,18 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationStack(path: $navigationViewModel.path) {
-            TabView(selection: $selectedTab) {
-                ExerciseTabView()
-                    .tag(MainTabs.exercise)
-                    .tabItem { MainTabs.exercise.tabItem }
-                
-                MeasureTabView()
-                    .tag(MainTabs.test)
-                    .tabItem { MainTabs.test.tabItem }
-                
-                LibraryTabView()
-                    .tag(MainTabs.library)
-                    .tabItem { MainTabs.library.tabItem }
-                
-                StatsTabView()
-                    .tag(MainTabs.stats)
-                    .tabItem { MainTabs.stats.tabItem }
-                
-                SettingsView()
-                    .tag(MainTabs.settings)
-                    .tabItem { MainTabs.settings.tabItem }
-            }
-            .navigationTitle(selectedTab.name)
-            .navigationDestination(for: Route.self) { route in
-                route.destinationView
+        TabView(selection: $selectedTab) {
+            ForEach(MainTabs.allCases) { tab in
+                NavigationStack(path: $navigationViewModel.path) {
+                    tab.tabView
+                        .navigationTitle(tab.name)
+                        .navigationDestination(for: Route.self) { route in
+                            route.destinationView
+                        }
+
+                }
+                .tag(tab)
+                .tabItem { tab.tabItem }
             }
         }
     }
@@ -54,3 +41,4 @@ struct ContentView_Previews: PreviewProvider {
             .environmentObject(NavigationViewModel())
     }
 }
+

@@ -18,10 +18,6 @@ struct ExerciseTabView: View {
         }
         .background(Color.srBackground)
         .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            sortToolBarItem
-            addToolBarItem
-        }
         .task {
             exerciseViewModel.fetchArticles()
         }
@@ -51,34 +47,6 @@ extension ExerciseTabView {
         }
         .pickerStyle(.segmented)
         .padding(16)
-    }
-
-    var sortToolBarItem: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarLeading) {
-            Button {
-                print("WIP SORT")
-            } label: {
-                HStack {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                    Text("Sort")
-                }
-                .font(.system(size: 17, weight: .semibold))
-            }
-        }
-    }
-    
-    var addToolBarItem: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Button {
-                print("WIP ADD")
-            } label: {
-                HStack {
-                    Text("Add")
-                    Image(systemName: "plus")
-                }
-                .font(.system(size: 17, weight: .semibold))
-            }
-        }
     }
 }
 

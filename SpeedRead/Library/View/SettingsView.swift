@@ -14,7 +14,7 @@ enum SelectedSettingsSheet : String, Identifiable {
     case font
 }
 
-struct SettingsSheetView: View {
+struct SettingsView: View {
     @EnvironmentObject var settingsViewModel: SettingsViewModel
     
     var body: some View {
@@ -32,12 +32,12 @@ struct SettingsSheetView: View {
 
 struct SettingsSheetView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsSheetView()
+        SettingsView()
             .environmentObject(SettingsViewModel())
     }
 }
 
-extension SettingsSheetView {
+extension SettingsView {
     var readingModeView: some View {
         HStack {
             Text("Reading Mode")
@@ -87,7 +87,7 @@ extension SettingsSheetView {
                 }
             } label: {
                 HStack {
-                    Text(settingsViewModel.selectedFont.name)
+                    Text(settingsViewModel.selectedFont.name ?? "")
                     Image(systemName: "chevron.right")
                 }
                 .font(.system(size: 22, weight: .medium))
