@@ -6,10 +6,27 @@
 //
 
 import SwiftUI
-import Charts
 
 struct StatsTabView: View {
     @StateObject private var statsViewModel = StatsViewModel()
+    
+    @State private var weeklyChart = ChartDataType.speed
+    @State private var monthlyChart = ChartDataType.speed
+    private var currentWeeklyData: [StatPoint] {
+        switch weeklyChart {
+        case .speed: return statsViewModel.stats.weekDataSpeed ?? []
+        case .comp: return statsViewModel.stats.weekDataComp ?? []
+        default: return []
+        }
+    }
+    
+    private var currentMonthlyData: [StatPoint] {
+        switch monthlyChart {
+        case .speed: return statsViewModel.stats.monthDataSpeed ?? []
+        case .comp: return statsViewModel.stats.monthDataComp ?? []
+        default: return []
+        }
+    }
     
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -19,8 +36,8 @@ struct StatsTabView: View {
                 monthView
             }
         }
-        .padding(.top, 10)
-        .padding(.horizontal, 8)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.srBackground)
         .task {
@@ -31,138 +48,78 @@ struct StatsTabView: View {
 
 extension StatsTabView {
     var todayView: some View {
-        VStack(alignment: .leading) {
-            Text("Today")
-                .padding(.bottom, 8)
-            HStack {
-                HStack {
-                    Image(systemName: "minus.circle.fill")
-                    Text("Read: ")
-                    Spacer()
-                    Text((statsViewModel.stats.daySpeed?.formatted() ?? "") + " WPM")
-                        .foregroundColor(.blue)
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 14)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(.secondary.opacity(0.2))
-                }
-                
-                HStack {
-                    Image(systemName: "arrow.up.circle.fill")
-                    Text("Grasp:")
-                    Spacer()
-                    Text(statsViewModel.stats.dayComp?.formatted(.percent) ?? "")
-                        .foregroundColor(.orange)
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 14)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(.secondary.opacity(0.2))
-                }
-            }
-        }
-        .padding(.horizontal, 8)
+        StatsHeaderView(
+            speedData: statsViewModel.stats.daySpeed,
+            graspData: statsViewModel.stats.dayComp,
+            period: .today,
+            currentType: .constant(.none)
+        )
     }
     
     var weekView: some View {
         VStack(alignment: .leading) {
-            Text("Weekly")
-                .padding(.bottom, 8)
-            HStack {
-                HStack {
-                    Image(systemName: "minus.circle.fill")
-                    Text("Read: ")
-                    Spacer()
-                    Text((statsViewModel.stats.weekSpeed?.formatted() ?? "") + " WPM")
-                        .foregroundColor(.blue)
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 14)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(.secondary.opacity(0.2))
-                }
-                
-                HStack {
-                    Image(systemName: "arrow.up.circle.fill")
-                    Text("Grasp:")
-                    Spacer()
-                    Text(statsViewModel.stats.weekComp?.formatted(.percent) ?? "")
-                        .foregroundColor(.orange)
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 14)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(.secondary.opacity(0.2))
-                }
-            }
+            StatsHeaderView(
+                speedData: statsViewModel.stats.weekSpeed,
+                graspData: statsViewModel.stats.weekComp,
+                period: .week,
+                currentType: $weeklyChart
+            )
             .padding(.bottom, 10)
             
-            Chart(statsViewModel.stats.weekData ?? []) {
-                LineMark(
-                    x: .value("Mount", $0.mount),
-                    y: .value("Value", $0.value)
-                )
-                PointMark(
-                    x: .value("Mount", $0.mount),
-                    y: .value("Value", $0.value)
-                )
-            }
-            .foregroundColor(.blue)
-            .frame(height: 250)
+            ChartView(chartType: weeklyChart, data: currentWeeklyData)
         }
-        .padding(.horizontal, 8)
     }
     
     var monthView: some View {
         VStack(alignment: .leading) {
-            Text("Monthly")
-                .padding(.bottom, 8)
-            HStack {
-                HStack {
-                    Image(systemName: "minus.circle.fill")
-                    Text("Read: ")
-                    Spacer()
-                    Text((statsViewModel.stats.monthSpeed?.formatted() ?? "") + " WPM")
-                        .foregroundColor(.blue)
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 14)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(.secondary.opacity(0.2))
-                }
-                
-                HStack {
-                    Image(systemName: "arrow.up.circle.fill")
-                    Text("Grasp:")
-                    Spacer()
-                    Text(statsViewModel.stats.monthComp?.formatted(.percent) ?? "")
-                        .foregroundColor(.orange)
-                }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 14)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(.secondary.opacity(0.2))
-                }
-            }
+            StatsHeaderView(
+                speedData: statsViewModel.stats.monthSpeed,
+                graspData: statsViewModel.stats.monthComp,
+                period: .month,
+                currentType: $monthlyChart
+            )
             .padding(.bottom, 10)
             
-            Chart(statsViewModel.stats.monthData ?? []) {
-                BarMark(
-                    x: .value("Mount", $0.mount),
-                    y: .value("Value", $0.value)
-                )
-            }
-            .foregroundColor(.orange)
-            .frame(height: 250)
+            ChartView(chartType: monthlyChart, data: currentMonthlyData)
         }
-        .padding(.horizontal, 8)
+    }
+}
+
+enum ChartDataType {
+    case speed
+    case comp
+    case none
+    
+    var color: Color {
+        switch self {
+        case .speed: return .blue
+        case .comp: return .orange
+        default: return .white
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .speed: return "speedometer"
+        case .comp: return "lightbulb.circle"
+        default: return "question"
+        }
+    }
+    
+    var name: String {
+        switch self {
+        case .speed: return "Speed"
+        case .comp: return "Grasp"
+        default: return "NONE"
+        }
+    }
+    
+    func formattedData(data: Double?) -> String {
+        switch self {
+        case .speed: return (data?.formatted() ?? "") + " WPM"
+        case .comp: return data?.formatted(.percent) ?? ""
+        default: return "NONE"
+        }
     }
 }
 

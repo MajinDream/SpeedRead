@@ -14,11 +14,13 @@ struct StatsModel: Codable {
     
     let weekSpeed: Double?
     let weekComp: Double?
-    let weekData: [StatPoint]?
+    let weekDataSpeed: [StatPoint]?
+    let weekDataComp: [StatPoint]?
     
     let monthSpeed: Double?
     let monthComp: Double?
-    let monthData: [StatPoint]?
+    let monthDataSpeed: [StatPoint]?
+    let monthDataComp: [StatPoint]?
     
     static var example: StatsModel {
         StatsModel(
@@ -26,7 +28,7 @@ struct StatsModel: Codable {
             dayComp: 0.59,
             weekSpeed: 312,
             weekComp: 0.87,
-            weekData: [
+            weekDataSpeed: [
                 StatPoint(mount: "Mon", value: 144),
                 StatPoint(mount: "Tue", value: 100),
                 StatPoint(mount: "Wed", value: 162),
@@ -35,13 +37,28 @@ struct StatsModel: Codable {
                 StatPoint(mount: "Sat", value: 243),
                 StatPoint(mount: "Sun", value: 271)
             ],
+            weekDataComp: [
+                StatPoint(mount: "Mon", value: 0.74),
+                StatPoint(mount: "Tue", value: 0.70),
+                StatPoint(mount: "Wed", value: 0.76),
+                StatPoint(mount: "Thu", value: 0.90),
+                StatPoint(mount: "Fri", value: 0.77),
+                StatPoint(mount: "Sat", value: 0.74),
+                StatPoint(mount: "Sun", value: 0.87)
+            ],
             monthSpeed: 352,
             monthComp: 0.73,
-            monthData: [
+            monthDataSpeed: [
                 StatPoint(mount: "W1", value: 214),
                 StatPoint(mount: "W2", value: 180),
                 StatPoint(mount: "W3", value: 251),
                 StatPoint(mount: "W4", value: 223),
+            ],
+            monthDataComp: [
+                StatPoint(mount: "W1", value: 0.72),
+                StatPoint(mount: "W2", value: 0.82),
+                StatPoint(mount: "W3", value: 0.72),
+                StatPoint(mount: "W4", value: 0.65),
             ]
         )
     }
@@ -52,10 +69,6 @@ struct StatPoint: Identifiable, Codable {
     var mount: String
     var value: Double
 }
-
-
-
-
 
 final class StatsViewModel: ObservableObject {
     @Published var stats: StatsModel = StatsModel.example
