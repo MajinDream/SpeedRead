@@ -7,7 +7,6 @@
 
 import UIKit
 
-let defaults = Foundation.UserDefaults.standard
 final class SettingsViewModel: ObservableObject {
     
     @Published var readingMode: ReadingMode = ReadingMode(rawValue: defaults.string(forKey: "readingMode") ?? "Highlight") ?? .highlight {

@@ -30,7 +30,7 @@ final class LibraryViewModel: ObservableObject {
     @Published var addedBook = NewBook()
     
     var librarySubsription: AnyCancellable?
-    var readingFetchSubsciption: AnyCancellable?
+    var readingFetchSubscription: AnyCancellable?
     
     func fetchLibrary() async {
         let request = LibraryRequest.fetchLibrary.url
@@ -60,7 +60,7 @@ final class LibraryViewModel: ObservableObject {
                 return
             }
             
-            readingFetchSubsciption = NetworkingManager.download(url: url)
+            readingFetchSubscription = NetworkingManager.download(url: url)
                 .tryMap({ data in
                     return String(data: data, encoding: .utf8) ?? "error fetching text"
                 })

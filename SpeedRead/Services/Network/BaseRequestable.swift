@@ -90,3 +90,9 @@ extension BaseRequestable {
         ]
     }
 }
+
+struct BaseResponse: Codable {
+    let code: Int?
+    let message: String?
+    let error: String?
+}

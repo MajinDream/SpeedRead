@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var navigationViewModel: NavigationViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     @State private var selectedTab = MainTabs.library
     
     init() {
@@ -18,18 +19,31 @@ struct ContentView: View {
     }
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            ForEach(MainTabs.allCases) { tab in
-                NavigationStack(path: $navigationViewModel.path) {
-                    tab.tabView
-                        .navigationTitle(tab.name)
-                        .navigationDestination(for: Route.self) { route in
-                            route.destinationView
+        if authViewModel.token.isEmpty {
+            NavigationStack() {
+                LoginView()
+                    .toolbar {
+                        ToolbarItem {
+                            NavigationLink("Create account") {
+                                RegisterView()
+                            }
                         }
-
+                    }
+            }
+        } else {
+            TabView(selection: $selectedTab) {
+                ForEach(MainTabs.allCases) { tab in
+                    NavigationStack(path: $navigationViewModel.path) {
+                        tab.tabView
+                            .navigationTitle(tab.name)
+                            .navigationDestination(for: Route.self) { route in
+                                route.destinationView
+                            }
+                        
+                    }
+                    .tag(tab)
+                    .tabItem { tab.tabItem }
                 }
-                .tag(tab)
-                .tabItem { tab.tabItem }
             }
         }
     }
@@ -39,6 +53,7 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
             .environmentObject(NavigationViewModel())
+            .environmentObject(AuthViewModel())
     }
 }
 

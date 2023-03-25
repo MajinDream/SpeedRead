@@ -60,8 +60,6 @@ final class MeasureTestViewModel: ObservableObject {
     func didTapAnswerButton(index: Int) {
         guard let correctAnswerIndex = test.questions?[currentQuestionIndex].correctAnswer else { return }
         self.correctAnswerIndex = correctAnswerIndex
-        print("DEBUG: \(correctAnswerIndex)")
-        print("DEBUG: \(index)")
         if correctAnswerIndex == index { correctAnswerCount += 1 }
     }
 }

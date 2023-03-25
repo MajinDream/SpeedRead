@@ -70,8 +70,6 @@ extension LibraryTabView {
     }
     
     var addBookView: some View {
-        
-        
         VStack(spacing: 10) {
             Text("Add your book")
                 .padding(.bottom, 12)

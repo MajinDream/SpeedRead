@@ -10,3 +10,5 @@ import Foundation
 enum Constants: String {
     case baseURL = "http://13.115.20.106/api"
 }
+
+let defaults = Foundation.UserDefaults.standard

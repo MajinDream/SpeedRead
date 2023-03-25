@@ -11,12 +11,15 @@ import SwiftUI
 struct SpeedReadApp: App {
     @StateObject var navigationViewModel = NavigationViewModel()
     @StateObject var settingsViewModel = SettingsViewModel()
+    @StateObject var authViewModel = AuthViewModel()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(navigationViewModel)
                 .environmentObject(settingsViewModel)
+                .environmentObject(authViewModel)
         }
     }
 }
+

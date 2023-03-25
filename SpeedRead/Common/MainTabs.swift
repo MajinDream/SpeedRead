@@ -35,7 +35,7 @@ enum MainTabs: String, Hashable, CaseIterable, Identifiable {
         case .test:         MeasureTabView()
         case .library:      LibraryTabView()
         case .stats:        StatsTabView()
-        case .settings:     StatsTabView()
+        case .settings:     SettingsTabView()
         }
     }
 
