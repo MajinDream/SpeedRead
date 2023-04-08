@@ -16,11 +16,11 @@ struct LibraryResponse: Codable {
 
 struct NewBook: Codable {
     var title: String = ""
-    var subtitle: String = ""
+    var fileName: String = ""
     var author: String = ""
     var type: String = ""
-    var iconUrl: String = ""
-    var url: String = ""
+    var icon: Data = Data()
+    var book: Data = Data()
 }
 
 final class LibraryViewModel: ObservableObject {
@@ -56,34 +56,22 @@ final class LibraryViewModel: ObservableObject {
     }
     
     func addBook() async {
+        isLoading = true
         var requestMain: BaseRequestable? = nil
-        if let fileURL = Bundle.main.url(forResource: "example", withExtension: "txt"),
-           let imageURL = Bundle.main.url(forResource: "image", withExtension: "jpg") {
-            do {
-                let fileData = try Data(contentsOf: fileURL)
-                let fileName = fileURL.lastPathComponent
-                let imageFileData = try Data(contentsOf: imageURL)
-                let imageFileName = imageURL.lastPathComponent
-                
-                requestMain = UploadFileRequest(
-                    author: "Author Name",
-                    title: "Book Title",
-                    fileData: fileData,
-                    fileName: fileName,
-                    imageFileData: imageFileData,
-                    imageFileName: imageFileName
-                )
-                
-            } catch {
-                print("Error reading file data: \(error)")
-            }
-        }
         
-        guard let requestMain else { return }
+        requestMain = UploadFileRequest(
+            author: addedBook.author,
+            title: addedBook.title,
+            fileData: addedBook.book,
+            fileName: addedBook.fileName,
+            imageFileData: addedBook.icon,
+            imageFileName: "\(addedBook.title).jpg"
+        )
+        
+        print(String(data: addedBook.book, encoding: .utf8))
+        
+        guard let requestMain = requestMain as? UploadFileRequest else { return }
         let request = requestMain.urlRequest
-        print("DEBUG: \(request.description)")
-        print("DEBUG: \(request.allHTTPHeaderFields)")
-        print("DEBUG: \(request.httpBody?.description)")
         
         librarySubsription = NetworkingManager.download(url: request)
             .decode(
@@ -99,6 +87,7 @@ final class LibraryViewModel: ObservableObject {
                     } else {
                         print("DEBUG: Add Book SUCCESS")
                     }
+                    self?.isLoading = false
                     self?.addBookSubsription?.cancel()
                 }
             )
@@ -111,6 +100,7 @@ final class LibraryViewModel: ObservableObject {
                 let link = reading.url,
                 let url = URL(string: link)
             else {
+                self.readings.removeAll { $0.id == reading.id }
                 print("DEBUG: URL ERROR \(reading.title)")
                 continue
             }
@@ -122,6 +112,11 @@ final class LibraryViewModel: ObservableObject {
                 .sink(
                     receiveCompletion: NetworkingManager.handleCompletion,
                     receiveValue: { text in
+                        if text.isEmpty {
+                            self.readings.removeAll { $0.id == reading.id }
+                            self.readingFetchSubscription?.cancel()
+                            return
+                        }
                         let clearedText = text
                             .replacingOccurrences(of: "(\r\n){3,}", with: "\r\n ", options: .regularExpression)
                             .replacingOccurrences(of: "\r\n", with: "\r\n ", options: .regularExpression)
@@ -152,6 +147,7 @@ final class LibraryViewModel: ObservableObject {
                         )
                         
                         self.isLoading = false
+                        self.readingFetchSubscription?.cancel()
                         
                         print("DEBUG: Caching \(reading.title) is finished")
                     }

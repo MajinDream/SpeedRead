@@ -29,9 +29,7 @@ enum LibraryRequest: BaseRequestable {
         switch self {
         case let .addBook(newBook): return [
             "author": newBook.author,
-            "title": newBook.title,
-            "image": newBook.iconUrl,
-            "book": newBook.url
+            "title": newBook.title
         ]
         default: return [:]
         }
@@ -83,30 +81,59 @@ struct UploadFileRequest: BaseRequestable {
         
         // Add parameters
         for (key, value) in parameters {
-            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("--\(Self.boundary)\r\n".data(using: .utf8)!)
             body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
             body.append("\(value)\r\n".data(using: .utf8)!)
         }
         
         // Add image file data
         if let imageData = imageFileData, let imageFileName = imageFileName {
-            body.append("--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"image\"; filename=\"\(imageFileName)\"\r\n".data(using: .utf8)!)
+            body.append("--\(Self.boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"imageUrl\"; filename=\"\(imageFileName)\"\r\n".data(using: .utf8)!)
             body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
             body.append(imageData)
             body.append("\r\n".data(using: .utf8)!)
         }
         
         // Add file data
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"book\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+        body.append("--\(Self.boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"bookUrl\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
         body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
         body.append(fileData)
         body.append("\r\n".data(using: .utf8)!)
         
         
-        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        body.append("--\(Self.boundary)--\r\n".data(using: .utf8)!)
         
         return body
+    }
+    
+    var urlRequest: URLRequest {
+        let fullPath = baseURL + "/" + "\(path)"
+        
+        var urlComponents = URLComponents(string: fullPath)
+        if method == .get && !parameters.isEmpty {
+            urlComponents?.queryItems = parameters.map { URLQueryItem(name: $0.key, value: String(describing: $0.value)) }
+        }
+        
+        var request = URLRequest(url: (urlComponents?.url)!)
+        request.allHTTPHeaderFields = headers
+        request.httpMethod = method.rawValue
+
+        if method != .get && !parameters.isEmpty {
+            if method == .post && body != nil {
+                request.setValue("multipart/form-data; boundary=\(Self.boundary)", forHTTPHeaderField: "Content-Type")
+                request.httpBody = createMultipartBody()
+            } else {
+                if let jsonData = try? JSONSerialization.data(withJSONObject: parameters, options: .fragmentsAllowed) {
+                    request.httpBody = jsonData
+                    let decoded = try? JSONSerialization.jsonObject(with: jsonData, options: [])
+                    if let dictFromJSON = decoded as? [String: Any] {
+                        print(dictFromJSON)
+                    }
+                }
+            }
+        }
+        return request
     }
 }

@@ -7,12 +7,10 @@
 
 import Foundation
 import Combine
+import Logging
 
-    //TODO: 
-    //Refactor Constants aka baseURL
     
 class NetworkingManager {
-    
     enum NetworkingError: LocalizedError {
         case badURLResponse(url: URLRequest)
         case unknown
@@ -38,6 +36,9 @@ class NetworkingManager {
             throw NetworkingError.badURLResponse(url: urlRequest)
         }
         guard response.statusCode >= 200 && response.statusCode < 300 else {
+            print(response.statusCode)
+            print(response.description)
+            print(response.allHeaderFields)
             throw NetworkingError.badURLResponse(url: urlRequest)
         }
         return output.data

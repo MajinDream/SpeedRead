@@ -11,9 +11,15 @@ import PhotosUI
 struct LibraryTabView: View {
     @StateObject var libraryViewModel = LibraryViewModel()
     
-    @State private var avatarItem: PhotosPickerItem?
-    @State private var avatarImage: Image?
     @State private var isRefreshing = false
+    
+    @State private var avatarItem: PhotosPickerItem?
+    @State private var avatarData: Data?
+    @State private var avatarImage: Image?
+    @State private var isPickerShown = false
+    @State private var fileurl: URL?
+    @State private var fileData: Data?
+    
     
     var body: some View {
         ZStack {
@@ -88,7 +94,6 @@ extension LibraryTabView {
                 .padding(.bottom, 12)
             Group {
                 TextField("Title", text: $libraryViewModel.addedBook.title)
-                TextField("Subtitle", text: $libraryViewModel.addedBook.subtitle)
                 TextField("Author", text: $libraryViewModel.addedBook.author)
                 TextField("Type", text: $libraryViewModel.addedBook.type)
                 
@@ -102,12 +107,38 @@ extension LibraryTabView {
                             .frame(height: 50)
                     }
                 }
-                TextField("Book URL", text: $libraryViewModel.addedBook.url)
+                
+                HStack {
+                    if let url = fileurl {
+                        Text("\(url.lastPathComponent)")
+                    } else {
+                        Text("No file selected")
+                    }
+                    
+                    Spacer()
+                    
+                    Button("Select File") {
+                        isPickerShown = true
+                    }
+                }
+                
                 Button("Add Book") {
                     Task {
+                        libraryViewModel.addedBook.icon = self.avatarData ?? Data()
+                        do {
+                            guard let fileurl = fileurl else { return }
+                            fileData = try Data(contentsOf: fileurl)
+                        } catch {
+                            print("Error reading file data: \(error)")
+                        }
+                        libraryViewModel.addedBook.book = self.fileData ?? Data()
+                        libraryViewModel.addedBook.fileName = self.fileurl?.lastPathComponent ?? ""
                         await libraryViewModel.addBook()
                     }
                 }
+            }
+            .sheet(isPresented: $isPickerShown) {
+                DocumentPicker(isShown: $isPickerShown, url: $fileurl)
             }
             .padding()
             .background {
@@ -118,6 +149,7 @@ extension LibraryTabView {
         .onChange(of: avatarItem) { _ in
             Task {
                 if let data = try? await avatarItem?.loadTransferable(type: Data.self) {
+                    avatarData = data
                     if let uiImage = UIImage(data: data) {
                         avatarImage = Image(uiImage: uiImage)
                         return
@@ -129,7 +161,7 @@ extension LibraryTabView {
         }
         .padding(16)
         .font(.system(size: 20, weight: .semibold))
-        .presentationDetents([.fraction(0.7)])
+        .presentationDetents([.fraction(0.8)])
     }
 
     var addToolBarItem: some ToolbarContent {

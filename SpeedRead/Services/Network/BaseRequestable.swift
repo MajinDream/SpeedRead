@@ -25,18 +25,21 @@ protocol BaseRequestable {
     var parameters: [String: Any] { get }
     var headers: HTTPHeaders { get }
     var body: Data? { get }
-    var boundary: String { get }
+    static var boundary: String { get }
     var urlRequest: URLRequest { get }
 }
 
+struct StaticBoundary {
+    static let boundary = "Boundary-\(UUID().uuidString)"
+}
 
 extension BaseRequestable {
     var baseURL: String {
         return Constants.baseURL.rawValue
     }
     
-    var boundary: String {
-        return "Boundary-\(UUID().uuidString)"
+    static var boundary: String {
+        return StaticBoundary.boundary
     }
     
     func createMultipartBody() -> Data {
@@ -44,12 +47,12 @@ extension BaseRequestable {
         
         // Add parameters
         for (key, value) in parameters {
-            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("--\(Self.boundary)\r\n".data(using: .utf8)!)
             body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
             body.append("\(value)\r\n".data(using: .utf8)!)
         }
         
-        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        body.append("--\(Self.boundary)--\r\n".data(using: .utf8)!)
         
         return body
     }
@@ -68,7 +71,7 @@ extension BaseRequestable {
 
         if method != .get && !parameters.isEmpty {
             if method == .post && body != nil {
-                request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+                request.setValue("multipart/form-data; boundary=\(Self.boundary)", forHTTPHeaderField: "Content-Type")
                 request.httpBody = createMultipartBody()
             } else {
                 if let jsonData = try? JSONSerialization.data(withJSONObject: parameters, options: .fragmentsAllowed) {
