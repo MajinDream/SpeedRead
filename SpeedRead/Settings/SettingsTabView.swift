@@ -28,6 +28,7 @@ struct SettingsTabView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .foregroundColor(.white)
         .background(Color.srBackground)
         .toolbar { logoutToolBarItem }
         .alert("Logout", isPresented: $isShowingLogoutAlert) {

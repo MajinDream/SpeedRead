@@ -32,6 +32,7 @@ struct MeasureTestPageView: View {
                 getReadingView(type: measureTestViewModel.readingType)
                     .padding(.bottom)
                 doneButton
+                    .padding(.bottom)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

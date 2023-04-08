@@ -13,6 +13,7 @@ struct LibraryTabView: View {
     
     @State private var avatarItem: PhotosPickerItem?
     @State private var avatarImage: Image?
+    @State private var isRefreshing = false
     
     var body: some View {
         ZStack {
@@ -37,6 +38,9 @@ struct LibraryTabView: View {
             if libraryViewModel.readings.isEmpty {
                 await libraryViewModel.fetchLibrary()
             }
+        }
+        .refreshable {
+            await libraryViewModel.fetchLibrary()
         }
     }
 }

@@ -29,13 +29,14 @@ final class LibraryViewModel: ObservableObject {
     @Published var isShowingAddBook = false
     @Published var addedBook = NewBook()
     
-    @Published var isLoading = true
+    @Published var isLoading = false
     
     var librarySubsription: AnyCancellable?
     var addBookSubsription: AnyCancellable?
     var readingFetchSubscription: AnyCancellable?
     
     func fetchLibrary() async {
+        isLoading = true
         let request = LibraryRequest.fetchLibrary.urlRequest
         librarySubsription = NetworkingManager.download(url: request)
             .decode(

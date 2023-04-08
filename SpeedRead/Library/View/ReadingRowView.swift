@@ -6,9 +6,18 @@
 //
 
 import SwiftUI
+import OrderedCollections
 
 struct ReadingRowView: View {
     let reading: Reading
+    let readingPages: OrderedDictionary<Int, [String]>?
+    let currentPage: Int
+    
+    init(reading: Reading) {
+        self.reading = reading
+        self.readingPages = OrderedDictionary<Int, [String]>.load(on: .cachesDirectory, fromFileName: "\(reading.id).txt")
+        self.currentPage = defaults.integer(forKey: "PageFor\(reading.id)")
+    }
     
     var body: some View {
         NavigationLink(value: Route.reading(reading)) {
@@ -31,8 +40,10 @@ struct ReadingRowView: View {
                         .padding(.bottom, 18)
                     
                     
-                    ReadingProgressBar(pagesRead: reading.pagesRead ?? 17,
-                                       pagesTotal: reading.pagesTotal ?? 100)
+                    ReadingProgressBar(
+                        pagesRead: currentPage ?? 17,
+                        pagesTotal: readingPages?.count ?? 100
+                    )
                 }
                 
                 .padding(.vertical, 12)

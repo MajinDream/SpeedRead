@@ -21,10 +21,6 @@ struct AsyncImageView: View {
                 image
                     .resizable()
                     .scaledToFill()
-            } else if phase.error != nil { 
-                Text("404 \n No image available")
-                    .font(.title3)
-                    .multilineTextAlignment(.center)
             } else {
                 ProgressView()
                     .font(.largeTitle)

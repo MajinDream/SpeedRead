@@ -10,15 +10,19 @@ import Combine
 
 final class MeasureViewModel: ObservableObject {
     @Published var tests = [MeasureTest]()
-    @Published var isLoading = true
+    @Published var isLoading = false
     
     var measureSubsription: AnyCancellable?
     var questionsSubsription: AnyCancellable?
     
     func fetchTests() async {
-        tests = [MeasureTest.example]
-        isLoading = false
-        return
+        DispatchQueue.main.async {
+            self.tests = [MeasureTest.example]
+            self.isLoading = false
+            return
+        }
+        
+        isLoading = true
         let request = MeasureRequest.fetchTests.urlRequest
         measureSubsription = NetworkingManager.download(url: request)
             .decode(
@@ -46,6 +50,7 @@ final class MeasureViewModel: ObservableObject {
         }
         
         for test in tests.enumerated() {
+            isLoading = true
             let request = MeasureRequest.fetchQuestions(test.element.id).urlRequest
             questionsSubsription = NetworkingManager.download(url: request)
                 .decode(

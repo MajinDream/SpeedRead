@@ -30,7 +30,9 @@ struct MeasureTabView: View {
             }
         }
         .task {
-            measureViewModel.isLoading = true
+            await measureViewModel.fetchTests()
+        }
+        .refreshable {
             await measureViewModel.fetchTests()
         }
     }

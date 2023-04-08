@@ -49,15 +49,6 @@ extension BaseRequestable {
             body.append("\(value)\r\n".data(using: .utf8)!)
         }
         
-        // Add file data
-        if let fileData = self.body {
-            body.append("--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"file\"; filename=\"file\"\r\n".data(using: .utf8)!)
-            body.append("Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8)!)
-            body.append(fileData)
-            body.append("\r\n".data(using: .utf8)!)
-        }
-        
         body.append("--\(boundary)--\r\n".data(using: .utf8)!)
         
         return body

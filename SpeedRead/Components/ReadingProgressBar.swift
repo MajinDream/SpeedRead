@@ -27,10 +27,11 @@ struct ReadingProgressBar: View {
             }
             .frame(height: 6)
             
-            HStack {
-                Text("\(percentage.formatted(.percent)) left")
+            HStack(spacing: 0) {
+                Text(String(format: "%.1f%%", percentage * 100))
+                Text(" or \(pagesLeft) pages left")
                 Spacer()
-                Text("\(pagesLeft) pages")
+                Text("\(pagesTotal) pages total")
             }
             .font(.system(size: 10, weight: .semibold))
             .foregroundColor(.srHelper)

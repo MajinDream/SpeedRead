@@ -130,10 +130,11 @@ struct StatPoint: Identifiable, Codable {
 
 final class StatsViewModel: ObservableObject {
     @Published var stats: StatsModel = StatsModel.example
-    @Published var isLoading = true
+    @Published var isLoading = false
     var statsSubsription: AnyCancellable?
     
     func fetchStats() async {
+        isLoading = true
         let request = StatsRequest.fetchStats.urlRequest
         statsSubsription = NetworkingManager.download(url: request)
             .decode(

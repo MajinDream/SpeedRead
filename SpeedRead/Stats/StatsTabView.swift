@@ -49,6 +49,9 @@ struct StatsTabView: View {
         .task {
             await statsViewModel.fetchStats()
         }
+        .refreshable {
+            await statsViewModel.fetchStats()
+        }
     }
 }
 
@@ -72,7 +75,9 @@ extension StatsTabView {
             )
             .padding(.bottom, 10)
             
-            ChartView(chartType: weeklyChart, data: currentWeeklyData)
+            if !currentWeeklyData.isEmpty {
+                ChartView(chartType: weeklyChart, data: currentWeeklyData)
+            }
         }
     }
     
@@ -86,7 +91,9 @@ extension StatsTabView {
             )
             .padding(.bottom, 10)
             
-            ChartView(chartType: monthlyChart, data: currentMonthlyData)
+            if !currentMonthlyData.isEmpty {
+                ChartView(chartType: monthlyChart, data: currentMonthlyData)
+            }
         }
     }
 }
