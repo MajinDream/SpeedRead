@@ -24,21 +24,43 @@ protocol BaseRequestable {
     var path: String { get }
     var parameters: [String: Any] { get }
     var headers: HTTPHeaders { get }
+    var body: Data? { get }
+    var boundary: String { get }
     var urlRequest: URLRequest { get }
-    var url: URL { get }
 }
+
 
 extension BaseRequestable {
     var baseURL: String {
         return Constants.baseURL.rawValue
     }
     
-    var url: URL {
-        let fullPath = baseURL + "/" + "\(path)"
-        guard let url = URL(string: fullPath) else {
-            return URL(string: "https://www.google.kz/")!
+    var boundary: String {
+        return "Boundary-\(UUID().uuidString)"
+    }
+    
+    func createMultipartBody() -> Data {
+        var body = Data()
+        
+        // Add parameters
+        for (key, value) in parameters {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(value)\r\n".data(using: .utf8)!)
         }
-        return url
+        
+        // Add file data
+        if let fileData = self.body {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"file\"; filename=\"file\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8)!)
+            body.append(fileData)
+            body.append("\r\n".data(using: .utf8)!)
+        }
+        
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        
+        return body
     }
     
     var urlRequest: URLRequest {
@@ -46,53 +68,44 @@ extension BaseRequestable {
         
         var urlComponents = URLComponents(string: fullPath)
         if method == .get && !parameters.isEmpty {
-            urlComponents?.queryItems = parameters.map { (key, value) in
-                var valueAsString = ""
-                if let value = value as? String {
-                    valueAsString = value
-                }
-                if let value = value as? Int {
-                    valueAsString = String(value)
-                }
-                if let value = value as? Double {
-                    valueAsString = String(value)
-                }
-                if let value = value as? Bool {
-                    if value {
-                        valueAsString = "true"
-                    } else {
-                        valueAsString = "false"
-                    }
-                }
-                return URLQueryItem(name: key, value: valueAsString)
-            }
+            urlComponents?.queryItems = parameters.map { URLQueryItem(name: $0.key, value: String(describing: $0.value)) }
         }
         
         var request = URLRequest(url: (urlComponents?.url)!)
         request.allHTTPHeaderFields = headers
         request.httpMethod = method.rawValue
+
         if method != .get && !parameters.isEmpty {
-            if let jsonData = try? JSONSerialization.data(withJSONObject: parameters, options: .fragmentsAllowed) {
-                request.httpBody = jsonData
-                let decoded = try? JSONSerialization.jsonObject(with: jsonData, options: [])
-                if let dictFromJSON = decoded as? [String: Any] {
-                    print(dictFromJSON)
+            if method == .post && body != nil {
+                request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+                request.httpBody = createMultipartBody()
+            } else {
+                if let jsonData = try? JSONSerialization.data(withJSONObject: parameters, options: .fragmentsAllowed) {
+                    request.httpBody = jsonData
+                    let decoded = try? JSONSerialization.jsonObject(with: jsonData, options: [])
+                    if let dictFromJSON = decoded as? [String: Any] {
+                        print(dictFromJSON)
+                    }
                 }
             }
         }
         return request
     }
     
+    var body: Data? {
+        return nil
+    }
+    
     var headers: HTTPHeaders {
         return [
             "Content-Type": "application/json",
-            "User-Agent": "iOS"
+            "User-Agent": "iOS",
+            "Authorization" : "Bearer \(defaults.string(forKey: "token") ?? "")"
         ]
     }
 }
 
 struct BaseResponse: Codable {
-    let code: Int?
+    let error: Bool?
     let message: String?
-    let error: String?
 }

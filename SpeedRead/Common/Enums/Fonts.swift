@@ -12,7 +12,8 @@ enum Fonts: String, CaseIterable, Identifiable {
     
     case sfProDisplay = "SF Pro Display"
     case avenir = "Avenir"
-    case timesNewRoman = "Times New Roman"
+    case timesNewRoman = "TimesNewRoman"
+    case openDyslexic = "OpenDyslexic"
     
     var name: String { self.rawValue }
 }

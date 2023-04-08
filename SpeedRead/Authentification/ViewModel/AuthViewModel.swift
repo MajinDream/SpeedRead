@@ -15,18 +15,13 @@ final class AuthViewModel: ObservableObject {
         }
     }
     
+    @Published var isLoading = false
+    
     var loginSubsciption: AnyCancellable?
     var registrationSubsciption: AnyCancellable?
     
     func login(username: String, password: String) async {
-        if username == "test", password == "test" {
-            DispatchQueue.main.async {
-                self.token = "success"
-            }
-            return
-        }
-        
-        let request = LoginRequest.login(username: username, password: password).url
+        let request = LoginRequest.login(username: username, password: password).urlRequest
         loginSubsciption = NetworkingManager.download(url: request)
             .decode(
                 type: LoginResponse.self,
@@ -35,20 +30,24 @@ final class AuthViewModel: ObservableObject {
             .sink(
                 receiveCompletion: NetworkingManager.handleCompletion,
                 receiveValue: { [weak self] loginResult in
-                    guard
-                        let loginToken = loginResult.token,
-                        loginResult.success == true else
-                    {
-                        //TODO: show error, return error, or something
+                    guard let loginToken = loginResult.data else {
+                        self?.loginSubsciption?.cancel()
                         return
                     }
+                    self?.isLoading = false
                     self?.token = loginToken
+                    self?.loginSubsciption?.cancel()
                 }
             )
     }
     
-    func register(username: String, password: String) async {
-        let request = RegisterRequest.register(username: username, password: password).url
+    func register(username: String, nickname: String, password: String) async {
+        let request = RegisterRequest.register(
+            username: username,
+            nickname: nickname,
+            password: password
+        ).urlRequest
+ 
         loginSubsciption = NetworkingManager.download(url: request)
             .decode(
                 type: RegisterResponse.self,
@@ -57,10 +56,14 @@ final class AuthViewModel: ObservableObject {
             .sink(
                 receiveCompletion: NetworkingManager.handleCompletion,
                 receiveValue: { [weak self] registerResult in
-                    guard registerResult.success == true else {
+                    guard let loginToken = registerResult.data else {
                         //TODO: show error, return error, or something
+                        self?.registrationSubsciption?.cancel()
                         return
                     }
+                    self?.isLoading = false
+                    self?.token = loginToken
+                    self?.registrationSubsciption?.cancel()
                     //TODO: send succes
                 }
             )

@@ -14,34 +14,40 @@ struct StatsTabView: View {
     @State private var monthlyChart = ChartDataType.speed
     private var currentWeeklyData: [StatPoint] {
         switch weeklyChart {
-        case .speed: return statsViewModel.stats.weekDataSpeed ?? []
-        case .comp: return statsViewModel.stats.weekDataComp ?? []
+        case .speed: return statsViewModel.stats.weekDataSpeed
+        case .comp: return statsViewModel.stats.weekDataComp
         default: return []
         }
     }
     
     private var currentMonthlyData: [StatPoint] {
         switch monthlyChart {
-        case .speed: return statsViewModel.stats.monthDataSpeed ?? []
-        case .comp: return statsViewModel.stats.monthDataComp ?? []
+        case .speed: return statsViewModel.stats.monthDataSpeed
+        case .comp: return statsViewModel.stats.monthDataComp
         default: return []
         }
     }
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 50) {
-                todayView
-                weekView
-                monthView
+        ZStack {
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 50) {
+                    todayView
+                    weekView
+                    monthView
+                }
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.srBackground)
+            
+            if statsViewModel.isLoading {
+                LoadingView()
             }
         }
-        .padding(.vertical, 10)
-        .padding(.horizontal, 16)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.srBackground)
         .task {
-//            await statsViewModel.fetchStats()
+            await statsViewModel.fetchStats()
         }
     }
 }
@@ -116,8 +122,8 @@ enum ChartDataType {
     
     func formattedData(data: Double?) -> String {
         switch self {
-        case .speed: return (data?.formatted() ?? "") + " WPM"
-        case .comp: return data?.formatted(.percent) ?? ""
+        case .speed: return String(format: "%.1f WPM", data ?? 0.0)
+        case .comp: return String(format: "%.1f %%", (data ?? 0.0) * 100)
         default: return "NONE"
         }
     }

@@ -33,7 +33,18 @@ struct ContentView: View {
         } else {
             TabView(selection: $selectedTab) {
                 ForEach(MainTabs.allCases) { tab in
-                    NavigationStack(path: $navigationViewModel.path) {
+                    let navigationPath = { () -> Binding<NavigationPath> in
+                        
+                        switch tab {
+                        case .exercise:     return $navigationViewModel.trainingPath
+                        case .test:         return $navigationViewModel.measurePath
+                        case .library:      return $navigationViewModel.libraryPath
+                        case .stats:        return $navigationViewModel.statsPath
+                        case .settings:     return $navigationViewModel.settingsPath
+                        }
+                    }
+                    
+                    NavigationStack(path: navigationPath()) {
                         tab.tabView
                             .navigationTitle(tab.name)
                             .navigationDestination(for: Route.self) { route in

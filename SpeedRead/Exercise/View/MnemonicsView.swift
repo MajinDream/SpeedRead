@@ -18,6 +18,8 @@ struct MnemonicsView: View {
     
     var body: some View {
         VStack {
+            Spacer()
+                .frame(height: 50)
             hiddenWord
             ZStack(alignment: .center) {
                 backgroundTextField
@@ -53,10 +55,10 @@ struct MnemonicsView: View {
                     .font(.system(size: 40, weight: .regular))
                     .padding(5)
                     .onAppear {
-                        isWordHidden.toggle()
+                        isWordHidden = false
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                             withAnimation() {
-                                isWordHidden.toggle()
+                                isWordHidden = true
                             }
                         }
                     }
@@ -67,10 +69,10 @@ struct MnemonicsView: View {
                     .opacity(isWordHidden ? 1.0 : 0)
             }
             Button {
-                isWordHidden.toggle()
+                isWordHidden = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     withAnimation() {
-                        isWordHidden.toggle()
+                        isWordHidden = true
                     }
                 }
             } label: {

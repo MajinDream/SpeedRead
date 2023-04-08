@@ -18,7 +18,7 @@ enum StatsRequest: BaseRequestable {
 
     var path: String {
         switch self {
-        case .fetchStats: return "stats/list"
+        case .fetchStats: return "users/whoami"
         }
     }
 
@@ -27,4 +27,20 @@ enum StatsRequest: BaseRequestable {
         default: return [:]
         }
     }
+}
+
+struct StatsResponse: Codable {
+    let data: UserInfo?
+}
+
+struct UserInfo: Codable {
+    let user: UserData?
+    let stat: [StatsModel]?
+}
+
+struct UserData: Codable {
+    let id: String?
+    let email: String?
+    let name: String?
+    let readingsProgress: [Int]?
 }

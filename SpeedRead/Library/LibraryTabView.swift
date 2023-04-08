@@ -6,28 +6,37 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct LibraryTabView: View {
     @StateObject var libraryViewModel = LibraryViewModel()
     
+    @State private var avatarItem: PhotosPickerItem?
+    @State private var avatarImage: Image?
+    
     var body: some View {
-        VStack {
-            recentReadView
-            readingListView
-            //Spacer()
+        ZStack {
+            VStack {
+                recentReadView
+                readingListView
+                //Spacer()
+            }
+            .background(Color.srBackground)
+            .navigationTitle("Library")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar { addToolBarItem }
+            .sheet(isPresented: $libraryViewModel.isShowingAddBook) {
+                addBookView
+            }
+            
+            if libraryViewModel.isLoading {
+                LoadingView()
+            }
         }
-        .background(Color.srBackground)
-        .navigationTitle("Library")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar { addToolBarItem }
         .task {
-            await libraryViewModel.cacheReadings()
             if libraryViewModel.readings.isEmpty {
                 await libraryViewModel.fetchLibrary()
             }
-        }
-        .sheet(isPresented: $libraryViewModel.isShowingAddBook) {
-            addBookView
         }
     }
 }
@@ -78,17 +87,40 @@ extension LibraryTabView {
                 TextField("Subtitle", text: $libraryViewModel.addedBook.subtitle)
                 TextField("Author", text: $libraryViewModel.addedBook.author)
                 TextField("Type", text: $libraryViewModel.addedBook.type)
-                TextField("Cover URL", text: $libraryViewModel.addedBook.iconUrl)
+                
+                HStack {
+                    PhotosPicker("Select Cover", selection: $avatarItem, matching: .images)
+                    Spacer()
+                    if let avatarImage {
+                        avatarImage
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 50)
+                    }
+                }
                 TextField("Book URL", text: $libraryViewModel.addedBook.url)
                 Button("Add Book") {
-                    print("Added New Book")
-//                    libraryViewModel.addBook
+                    Task {
+                        await libraryViewModel.addBook()
+                    }
                 }
             }
             .padding()
             .background {
                 RoundedRectangle(cornerRadius: 8)
                     .foregroundColor(Color.srSecondary.opacity(0.2))
+            }
+        }
+        .onChange(of: avatarItem) { _ in
+            Task {
+                if let data = try? await avatarItem?.loadTransferable(type: Data.self) {
+                    if let uiImage = UIImage(data: data) {
+                        avatarImage = Image(uiImage: uiImage)
+                        return
+                    }
+                }
+                
+                print("DEBUG: Failed to pick photo")
             }
         }
         .padding(16)

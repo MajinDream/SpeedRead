@@ -11,15 +11,22 @@ struct ExerciseTabView: View {
     @StateObject private var exerciseViewModel = ExerciseViewModel()
     
     var body: some View {
-        VStack {
-            pagePickerView
-            exerciseViewModel.selectedPage.getPageView(viewModel: exerciseViewModel)
-            Spacer()
+        ZStack {
+            VStack {
+                pagePickerView
+                exerciseViewModel.selectedPage.getPageView(viewModel: exerciseViewModel)
+                Spacer()
+            }
+            .background(Color.srBackground)
+            .navigationBarTitleDisplayMode(.large)
+            
+            if exerciseViewModel.isLoading {
+                LoadingView()
+            }
         }
-        .background(Color.srBackground)
-        .navigationBarTitleDisplayMode(.large)
         .task {
-            exerciseViewModel.fetchArticles()
+            exerciseViewModel.isLoading = true
+            await exerciseViewModel.fetchTips()
         }
     }
 }

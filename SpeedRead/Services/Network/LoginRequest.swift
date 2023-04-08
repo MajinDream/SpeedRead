@@ -12,27 +12,28 @@ enum LoginRequest: BaseRequestable {
 
     var method: HTTPMethod {
         switch self {
-        case .login: return .get
+        case .login: return .post
         }
     }
 
     var path: String {
         switch self {
-        case .login: return "auth/login"
+        case .login: return "auth/signin"
         }
     }
 
     var parameters: Parameters {
         switch self {
-        case let .login(username, password): return ["username": username, "password": password]
+        case let .login(username, password): return [
+            "email": username,
+            "password": password
+        ]
         default: return [:]
         }
     }
 }
 
 struct LoginResponse: Codable {
-    let token: String?
-    let success: Bool?
-    let message: String?
+    let data: String?
 }
 

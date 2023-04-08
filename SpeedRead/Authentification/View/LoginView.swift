@@ -13,28 +13,37 @@ struct LoginView: View {
     @State private var password = ""
     
     var body: some View {
-        VStack(spacing: 10) {
-            Text("Log into your account")
-                .font(.title)
-                .padding(.bottom, 12)
-            Group {
-                TextField("Username", text: $username)
-                SecureField("Password", text: $password)
-                Button("Login") {
-                    Task {
-                        await authViewModel.login(username: username, password: password)
+        ZStack {
+            VStack(spacing: 10) {
+                Text("Log into your account")
+                    .font(.title)
+                    .padding(.bottom, 12)
+                Group {
+                    TextField("Username", text: $username)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                    SecureField("Password", text: $password)
+                    Button("Login") {
+                        Task {
+                            authViewModel.isLoading = true
+                            await authViewModel.login(username: username, password: password)
+                        }
                     }
                 }
+                .padding()
+                .background {
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(Color.srSecondary.opacity(0.2))
+                }
             }
-            .padding()
-            .background {
-                RoundedRectangle(cornerRadius: 8)
-                    .foregroundColor(Color.srSecondary.opacity(0.2))
+            .padding(16)
+            .font(.system(size: 20, weight: .semibold))
+            .presentationDetents([.fraction(0.7)])
+            
+            if authViewModel.isLoading {
+                LoadingView()
             }
         }
-        .padding(16)
-        .font(.system(size: 20, weight: .semibold))
-        .presentationDetents([.fraction(0.7)])
     }
 }
 

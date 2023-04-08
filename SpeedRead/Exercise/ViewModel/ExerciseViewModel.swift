@@ -11,12 +11,28 @@ import Combine
 final class ExerciseViewModel: ObservableObject {
     @Published var selectedPage = ExerciseTabView.ExercisePage.exercises
     @Published var exercises = [Exercise.schulte, Exercise.mnemonics]
-                                // Exercise.allCases
-    @Published var tips = Array(repeating: Article.example, count: 1)
+                                //TODO: Exercise.allCases
+    @Published var tips = [Article]()
+    @Published var isLoading = false
     
-    var test: AnyCancellable?
+    var tipsSubsription: AnyCancellable?
     
-    func fetchArticles() {
-        //TODO
+    func fetchTips() async {
+        let request = TipsRequest.fetchTips.urlRequest
+        tipsSubsription = NetworkingManager.download(url: request)
+            .decode(
+                type: TipsResponse.self,
+                decoder: JSONDecoder()
+            )
+            .sink(
+                receiveCompletion: NetworkingManager.handleCompletion,
+                receiveValue: { [weak self] (tipsResponse) in
+                    if let tips = tipsResponse.articles {
+                        self?.tips = tips
+                    }
+                    self?.isLoading = false
+                    self?.tipsSubsription?.cancel()
+                }
+            )
     }
 }

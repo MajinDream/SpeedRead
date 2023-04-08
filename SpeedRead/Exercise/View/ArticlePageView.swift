@@ -36,7 +36,9 @@ extension ArticlePageView {
     var backToolBarItem: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
             Button {
-                navigationViewModel.goBack()
+                navigationViewModel.goBack(
+                    path: &navigationViewModel.trainingPath
+                )
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 17, weight: .semibold))

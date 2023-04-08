@@ -19,8 +19,25 @@ struct ReadingPageView: View {
     let reading: Reading
     let readingPages: OrderedDictionary<Int, [String]>?
     @State var words: [String] = [""]
-    @State var currentPage = 0
-    @State var currentPosition = 0
+    @State var currentPage = 0 {
+        didSet {
+            readingPageViewModel.saveCurrentPosition(
+                page: currentPage,
+                position: currentPosition,
+                readingId: reading.id
+            )
+        }
+    }
+    
+    @State var currentPosition = 0 {
+        didSet {
+            readingPageViewModel.saveCurrentPosition(
+                page: currentPage,
+                position: currentPosition,
+                readingId: reading.id
+            )
+        }
+    }
     
     @State var isStop = true
     @State var isPresentingPagePicker = false
@@ -43,6 +60,7 @@ struct ReadingPageView: View {
         .navigationTitle(reading.title)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
+        .onTapGesture(count: 2) { goBack() }
         .onTapGesture { pauseTimer() }
         .onAppear {
             let (page, position) = self.readingPageViewModel.getCurrentPosition(readingId: reading.id)
@@ -83,15 +101,20 @@ extension ReadingPageView {
             Text(words[(currentPosition+1)...].joined(separator: " "))
                 .foregroundColor(settingsViewModel.selectedTheme.textColor.opacity(1 - (settingsViewModel.constrast / 100)))
         }
-        .font(.system(size: settingsViewModel.fontSize, weight: .regular))
+        .font(
+            settingsViewModel.selectedFont == .sfProDisplay
+            ? .system(size: settingsViewModel.fontSize, weight: .regular)
+            : .custom(settingsViewModel.selectedFont.name, size: settingsViewModel.fontSize)
+        )
         .lineSpacing(5)
         .multilineTextAlignment(.leading)
         .onReceive(timer) { _ in
             showNextWord()
         }
         .padding(.horizontal, 25)
-        .padding(.top, 10)
+        .padding(.vertical, 10)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .id(self.readingPageViewModel.scrollViewID)
     }
     
     var singleWordView: some View {
@@ -107,7 +130,9 @@ extension ReadingPageView {
     var backToolBarItem: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
             Button {
-                navigationViewModel.goBack()
+                navigationViewModel.goBack(
+                    path: &navigationViewModel.libraryPath
+                )
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 17, weight: .semibold))
@@ -200,17 +225,20 @@ extension ReadingPageView {
     func showNextWord() {
         if (currentPosition + 1) == words.count {
             currentPage += 1
+            readingPageViewModel.scrollViewID = UUID()
             words = readingPages?[currentPage] ?? ["Error"]
             currentPosition = 0
         } else {
             currentPosition += 1
         }
-        
-        readingPageViewModel.saveCurrentPosition(
-            page: currentPage,
-            position: currentPosition,
-            readingId: reading.id
-        )
+    }
+    
+    func goBack() {
+        if (currentPosition - 10) <= 0 {
+            currentPosition = 0
+        } else {
+            currentPosition -= 10
+        }
     }
 }
 

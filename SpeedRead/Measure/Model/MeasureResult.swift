@@ -12,4 +12,12 @@ struct MeasureResult: Codable, Equatable, Hashable {
     let contentWordCount: Int
     let correctAnswerCount: Int
     let questionCount: Int
+    let readingType: String
+}
+
+struct SendableMeasureResult: Codable, Equatable, Hashable {
+    let speed: Double
+    let comp: Double
+    let day: String
+    let readingType: String
 }

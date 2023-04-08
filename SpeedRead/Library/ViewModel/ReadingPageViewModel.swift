@@ -9,6 +9,8 @@ import Foundation
 import Combine
 
 final class ReadingPageViewModel: ObservableObject {
+    @Published var scrollViewID = UUID()
+    
     func saveCurrentPosition(page: Int, position: Int, readingId: String) {
         defaults.set(page, forKey: "PageFor\(readingId)")
         defaults.set(position, forKey: "PositionFor\(readingId)")

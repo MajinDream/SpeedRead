@@ -35,25 +35,33 @@ enum Route: Hashable {
 }
 
 final class NavigationViewModel: ObservableObject {
-    @Published var path: NavigationPath
+    @Published var trainingPath: NavigationPath
+    @Published var measurePath: NavigationPath
+    @Published var libraryPath: NavigationPath
+    @Published var statsPath: NavigationPath
+    @Published var settingsPath: NavigationPath
 
     init() {
-        path = NavigationPath()
+        trainingPath = NavigationPath()
+        measurePath = NavigationPath()
+        libraryPath = NavigationPath()
+        statsPath = NavigationPath()
+        settingsPath = NavigationPath()
     }
     
-    func clearPath() {
+    func clearPath(path: inout NavigationPath) {
         path.removeLast(path.count)
     }
 
-    func addToPath(route: Route) {
+    func addToPath(path: inout NavigationPath, route: Route) {
         path.append(route)
     }
     
-    func goBack() {
+    func goBack(path: inout NavigationPath) {
         path.removeLast()
     }
     
-    func goBack(count: Int) {
+    func goBack(path: inout NavigationPath, count: Int) {
         path.removeLast(count)
     }
 }

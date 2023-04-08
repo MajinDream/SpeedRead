@@ -11,19 +11,26 @@ struct MeasureTabView: View {
     @StateObject private var measureViewModel = MeasureViewModel()
     
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 20) {
-                ForEach(measureViewModel.tests) { test in
-                    MeasureTestRowView(test: test)
-                        .padding(.horizontal, 16)
+        ZStack {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 20) {
+                    ForEach(measureViewModel.tests) { test in
+                        MeasureTestRowView(test: test)
+                            .padding(.horizontal, 16)
+                    }
                 }
+                .shadow(radius: 4, y: 4)
             }
-            .shadow(radius: 4, y: 4)
+            .padding(.top, 10)
+            .background(Color.srBackground)
+            .navigationBarTitleDisplayMode(.large)
+            
+            if measureViewModel.isLoading {
+                LoadingView()
+            }
         }
-        .padding(.top, 10)
-        .background(Color.srBackground)
-        .navigationBarTitleDisplayMode(.large)
         .task {
+            measureViewModel.isLoading = true
             await measureViewModel.fetchTests()
         }
     }

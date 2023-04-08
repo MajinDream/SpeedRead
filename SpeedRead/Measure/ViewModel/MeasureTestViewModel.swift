@@ -9,6 +9,7 @@ import Foundation
 
 final class MeasureTestViewModel: ObservableObject {
     @Published var test: MeasureTest
+    @Published var readingType: MeasureTestPageView.MeasureReadingType = .regular
     @Published var currentQuestionIndex = 0
     @Published var correctAnswerIndex = -1
     @Published var timeElapsed = 0
@@ -34,8 +35,15 @@ final class MeasureTestViewModel: ObservableObject {
             timeElapsed: timeElapsed,
             contentWordCount: test.content?.count ?? 10,
             correctAnswerCount: correctAnswerCount,
-            questionCount: test.questions?.count ?? 4
+            questionCount: test.questions?.count ?? 4,
+            readingType: readingType.rawValue
         )
+    }
+    
+    var words: [String] {
+        return test.content?
+            .components(separatedBy: .whitespacesAndNewlines) ?? ["Error"]
+            .filter({($0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)).count > 0})
     }
     
     init(test: MeasureTest) {

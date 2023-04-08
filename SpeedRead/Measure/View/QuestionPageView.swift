@@ -19,7 +19,7 @@ struct QuestionPageView: View {
 extension QuestionPageView {
     private var questionsView: some View {
         VStack(spacing: 24) {
-            Text("\(measureTestViewModel.currentQuestion?.questionNumber?.formatted() ?? "") / \(measureTestViewModel.test.questions?.count.formatted() ?? "")")
+            Text("\((measureTestViewModel.currentQuestionIndex + 1).formatted() ) / \(measureTestViewModel.test.questions?.count.formatted() ?? "")")
             
             Text(.init(measureTestViewModel.currentQuestion?.question ?? ""))
                 .padding(10)
@@ -31,9 +31,15 @@ extension QuestionPageView {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         measureTestViewModel.goToNextQuestion()
                         if measureTestViewModel.isLastQuestion {
-                            navigationViewModel.addToPath(route: Route.measureResult(measureTestViewModel.measureResult))
+                            navigationViewModel.addToPath(
+                                path: &navigationViewModel.measurePath,
+                                route: Route.measureResult(measureTestViewModel.measureResult)
+                            )
                         } else {
-                            navigationViewModel.addToPath(route: Route.question(measureTestViewModel))
+                            navigationViewModel.addToPath(
+                                path: &navigationViewModel.measurePath,
+                                route: Route.question(measureTestViewModel)
+                            )
                         }
                     }
                 } label: {

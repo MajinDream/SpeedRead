@@ -24,16 +24,19 @@ struct NewBook: Codable {
 }
 
 final class LibraryViewModel: ObservableObject {
-    @Published var readings = [Reading.example] // change
+    @Published var readings = [Reading]()
     
     @Published var isShowingAddBook = false
     @Published var addedBook = NewBook()
     
+    @Published var isLoading = true
+    
     var librarySubsription: AnyCancellable?
+    var addBookSubsription: AnyCancellable?
     var readingFetchSubscription: AnyCancellable?
     
     func fetchLibrary() async {
-        let request = LibraryRequest.fetchLibrary.url
+        let request = LibraryRequest.fetchLibrary.urlRequest
         librarySubsription = NetworkingManager.download(url: request)
             .decode(
                 type: LibraryResponse.self,
@@ -51,13 +54,64 @@ final class LibraryViewModel: ObservableObject {
             )
     }
     
+    func addBook() async {
+        var requestMain: BaseRequestable? = nil
+        if let fileURL = Bundle.main.url(forResource: "example", withExtension: "txt"),
+           let imageURL = Bundle.main.url(forResource: "image", withExtension: "jpg") {
+            do {
+                let fileData = try Data(contentsOf: fileURL)
+                let fileName = fileURL.lastPathComponent
+                let imageFileData = try Data(contentsOf: imageURL)
+                let imageFileName = imageURL.lastPathComponent
+                
+                requestMain = UploadFileRequest(
+                    author: "Author Name",
+                    title: "Book Title",
+                    fileData: fileData,
+                    fileName: fileName,
+                    imageFileData: imageFileData,
+                    imageFileName: imageFileName
+                )
+                
+            } catch {
+                print("Error reading file data: \(error)")
+            }
+        }
+        
+        guard let requestMain else { return }
+        let request = requestMain.urlRequest
+        print("DEBUG: \(request.description)")
+        print("DEBUG: \(request.allHTTPHeaderFields)")
+        print("DEBUG: \(request.httpBody?.description)")
+        
+        librarySubsription = NetworkingManager.download(url: request)
+            .decode(
+                type: BaseResponse.self,
+                decoder: JSONDecoder()
+            )
+            .sink(
+                receiveCompletion: NetworkingManager.handleCompletion,
+                receiveValue: { [weak self] (baseResponse) in
+                    print(baseResponse)
+                    if baseResponse.error == true {
+                        print("DEBUG: Add Book ERROR")
+                    } else {
+                        print("DEBUG: Add Book SUCCESS")
+                    }
+                    self?.addBookSubsription?.cancel()
+                }
+            )
+    }
+    
     func cacheReadings() {
         for reading in readings {
+            print("DEBUG: Caching \(reading.title) has started")
             guard
                 let link = reading.url,
                 let url = URL(string: link)
             else {
-                return
+                print("DEBUG: URL ERROR \(reading.title)")
+                continue
             }
             
             readingFetchSubscription = NetworkingManager.download(url: url)
@@ -80,10 +134,12 @@ final class LibraryViewModel: ObservableObject {
                         var pages: OrderedDictionary<Int, [String]> = [:]
                         let maxPages = words.count / wordsPerPage
 
-                        for i in 0...maxPages-1 {
-                            let start = i * wordsPerPage
-                            let end = (i+1) * wordsPerPage
-                            pages[i] = Array(words[start...end])
+                        if maxPages > 1 {
+                            for i in 0...maxPages-1 {
+                                let start = i * wordsPerPage
+                                let end = (i+1) * wordsPerPage
+                                pages[i] = Array(words[start...end])
+                            }
                         }
                         
                         let start = maxPages * wordsPerPage
@@ -94,7 +150,9 @@ final class LibraryViewModel: ObservableObject {
                             withName: "\(reading.id).txt"
                         )
                         
-                        print("Caching \(reading.title) is finished")
+                        self.isLoading = false
+                        
+                        print("DEBUG: Caching \(reading.title) is finished")
                     }
                 )
         }

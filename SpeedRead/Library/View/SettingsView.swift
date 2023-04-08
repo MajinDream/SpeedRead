@@ -16,12 +16,13 @@ enum SelectedSettingsSheet : String, Identifiable {
 
 struct SettingsView: View {
     @EnvironmentObject var settingsViewModel: SettingsViewModel
+    var isMeasure: Bool = false
     
     var body: some View {
         VStack(spacing: 32) {
-            readingModeView
+            if !isMeasure { readingModeView }
             speedSliderView
-//            lengthSliderView
+            //            lengthSliderView
             contrastSliderView
             themePickerView
             fontChooseView
@@ -87,7 +88,7 @@ extension SettingsView {
                 }
             } label: {
                 HStack {
-                    Text(settingsViewModel.selectedFont.name ?? "")
+                    Text(settingsViewModel.selectedFont.name)
                     Image(systemName: "chevron.right")
                 }
                 .font(.system(size: 22, weight: .medium))
