@@ -21,6 +21,7 @@ struct TipRowView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Text(article.title)
                         .foregroundColor(.primary)
+                        .multilineTextAlignment(.leading)
                         .font(.system(size: 16, weight: .semibold))
                         .padding(.bottom, 4)
                     
@@ -32,7 +33,7 @@ struct TipRowView: View {
                     }
                 }
                 .padding(.vertical, 13)
-                .padding(.trailing, 20)
+                .padding(.trailing, 8)
                 
                 Spacer()
             }

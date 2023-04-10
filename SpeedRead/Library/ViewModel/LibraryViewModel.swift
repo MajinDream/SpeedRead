@@ -105,6 +105,7 @@ final class LibraryViewModel: ObservableObject {
                 continue
             }
             
+            isLoading = true
             readingFetchSubscription = NetworkingManager.download(url: url)
                 .tryMap({ data in
                     return String(data: data, encoding: .utf8) ?? "error fetching text"
@@ -113,6 +114,7 @@ final class LibraryViewModel: ObservableObject {
                     receiveCompletion: NetworkingManager.handleCompletion,
                     receiveValue: { text in
                         if text.isEmpty {
+                            print("DEBUG: EMPTY \(reading.title)")
                             self.readings.removeAll { $0.id == reading.id }
                             self.readingFetchSubscription?.cancel()
                             return

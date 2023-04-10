@@ -44,11 +44,12 @@ extension QuestionPageView {
                     }
                 } label: {
                     RoundedRectangle(cornerRadius: 20)
-                        .foregroundColor(measureTestViewModel.correctAnswerIndex == index ? .green : .srHelper)
+                        .foregroundColor(.srPrimary)
                         .padding(.horizontal, 20)
                         .overlay {
                             Text(answer)
                                 .font(.system(size: 22).bold())
+                                .padding(.horizontal, 20)
                                 .foregroundColor(.primary)
                                 .shadow(radius: 1)
                         }

@@ -18,7 +18,7 @@ struct ReadingPageView: View {
     
     let reading: Reading
     let readingPages: OrderedDictionary<Int, [String]>?
-    @State var words: [String] = [""]
+    @State var words: [String] = ["123", "123", "123"]
     @State var currentPage = 0 {
         didSet {
             readingPageViewModel.saveCurrentPosition(
@@ -67,6 +67,7 @@ struct ReadingPageView: View {
             self.currentPage = page
             self.currentPosition = position
             self.words = Array(readingPages?[currentPage] ?? [])
+            print("DEBUG READING: \(words)")
             stopTimer()
         }
         .toolbar {

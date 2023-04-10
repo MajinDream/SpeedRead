@@ -16,12 +16,6 @@ final class MeasureViewModel: ObservableObject {
     var questionsSubsription: AnyCancellable?
     
     func fetchTests() async {
-        DispatchQueue.main.async {
-            self.tests = [MeasureTest.example]
-            self.isLoading = false
-            return
-        }
-        
         isLoading = true
         let request = MeasureRequest.fetchTests.urlRequest
         measureSubsription = NetworkingManager.download(url: request)
@@ -49,22 +43,34 @@ final class MeasureViewModel: ObservableObject {
             return
         }
         
-        for test in tests.enumerated() {
-            isLoading = true
-            let request = MeasureRequest.fetchQuestions(test.element.id).urlRequest
-            questionsSubsription = NetworkingManager.download(url: request)
-                .decode(
-                    type: QuestionsResponse.self,
-                    decoder: JSONDecoder()
-                )
-                .sink(
-                    receiveCompletion: NetworkingManager.handleCompletion,
-                    receiveValue: { [weak self] (questionsResponse) in
-                        self?.tests[test.offset].questions = questionsResponse.questions
-                        self?.isLoading = false
-                        self?.questionsSubsription?.cancel()
-                    }
-                )
+        DispatchQueue.main.async {
+            self.isLoading = true
         }
+        let request = MeasureRequest.fetchQuestions.urlRequest
+        questionsSubsription = NetworkingManager.download(url: request)
+            .decode(
+                type: QuestionsResponse.self,
+                decoder: JSONDecoder()
+            )
+            .sink(
+                receiveCompletion: NetworkingManager.handleCompletion,
+                receiveValue: { [weak self] (questionsResponse) in
+                    guard let questions = questionsResponse.questions else { return }
+                    for question in questions {
+                        var quests = [Question]()
+                        guard let index = self?.tests.firstIndex(where: { $0.id == question.paragraphId }) else {
+                            continue
+                        }
+                        if self?.tests[index].questions == nil {
+                            self?.tests[index].questions = []
+                        }
+                        self?.tests[index].questions?.append(question)
+                    }
+                    self?.tests = self?.tests ?? []
+                    print("DEBUG tests: \(self?.tests)")
+                    self?.isLoading = false
+                    self?.questionsSubsription?.cancel()
+                }
+            )
     }
 }

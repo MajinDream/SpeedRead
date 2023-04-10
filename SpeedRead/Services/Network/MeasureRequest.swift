@@ -10,7 +10,7 @@ import Foundation
 enum MeasureRequest: BaseRequestable {
     case sendResult(SendableMeasureResult)
     case fetchTests
-    case fetchQuestions(String)
+    case fetchQuestions
 
     var method: HTTPMethod {
         switch self {
@@ -24,7 +24,7 @@ enum MeasureRequest: BaseRequestable {
         switch self {
         case .sendResult: return "stat/result"
         case .fetchTests: return "paragraph/list"
-        case let .fetchQuestions(paragraphId): return "questions/\(paragraphId)/list"
+        case let .fetchQuestions: return "questions/list"
         }
     }
 
