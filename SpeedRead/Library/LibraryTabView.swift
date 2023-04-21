@@ -89,79 +89,85 @@ extension LibraryTabView {
     }
     
     var addBookView: some View {
-        VStack(spacing: 10) {
-            Text("Add your book")
-                .padding(.bottom, 12)
-            Group {
-                TextField("Title", text: $libraryViewModel.addedBook.title)
-                TextField("Author", text: $libraryViewModel.addedBook.author)
-                TextField("Type", text: $libraryViewModel.addedBook.type)
-                
-                HStack {
-                    PhotosPicker("Select Cover", selection: $avatarItem, matching: .images)
-                    Spacer()
-                    if let avatarImage {
-                        avatarImage
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 50)
-                    }
-                }
-                
-                HStack {
-                    if let url = fileurl {
-                        Text("\(url.lastPathComponent)")
-                    } else {
-                        Text("No file selected")
-                    }
+        ZStack {
+            VStack(spacing: 10) {
+                Text("Add your book")
+                    .padding(.bottom, 12)
+                Group {
+                    TextField("Title", text: $libraryViewModel.addedBook.title)
+                    TextField("Author", text: $libraryViewModel.addedBook.author)
+                    TextField("Type", text: $libraryViewModel.addedBook.type)
                     
-                    Spacer()
-                    
-                    Button("Select File") {
-                        isPickerShown = true
-                    }
-                }
-                
-                Button("Add Book") {
-                    Task {
-                        libraryViewModel.addedBook.icon = self.avatarData ?? Data()
-                        do {
-                            guard let fileurl = fileurl else { return }
-                            fileData = try Data(contentsOf: fileurl)
-                        } catch {
-                            print("Error reading file data: \(error)")
+                    HStack {
+                        PhotosPicker("Select Cover", selection: $avatarItem, matching: .images)
+                        Spacer()
+                        if let avatarImage {
+                            avatarImage
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 50)
                         }
-                        libraryViewModel.addedBook.book = self.fileData ?? Data()
-                        libraryViewModel.addedBook.fileName = self.fileurl?.lastPathComponent ?? ""
-                        await libraryViewModel.addBook()
+                    }
+                    
+                    HStack {
+                        if let url = fileurl {
+                            Text("\(url.lastPathComponent)")
+                        } else {
+                            Text("No file selected")
+                        }
+                        
+                        Spacer()
+                        
+                        Button("Select File") {
+                            isPickerShown = true
+                        }
+                    }
+                    
+                    Button("Add Book") {
+                        Task {
+                            libraryViewModel.addedBook.icon = self.avatarData ?? Data()
+                            do {
+                                guard let fileurl = fileurl else { return }
+                                fileData = try Data(contentsOf: fileurl)
+                            } catch {
+                                print("Error reading file data: \(error)")
+                            }
+                            libraryViewModel.addedBook.book = self.fileData ?? Data()
+                            libraryViewModel.addedBook.fileName = self.fileurl?.lastPathComponent ?? ""
+                            await libraryViewModel.addBook()
+                        }
                     }
                 }
-            }
-            .sheet(isPresented: $isPickerShown) {
-                DocumentPicker(isShown: $isPickerShown, url: $fileurl)
-            }
-            .padding()
-            .background {
-                RoundedRectangle(cornerRadius: 8)
-                    .foregroundColor(Color.srSecondary.opacity(0.2))
-            }
-        }
-        .onChange(of: avatarItem) { _ in
-            Task {
-                if let data = try? await avatarItem?.loadTransferable(type: Data.self) {
-                    avatarData = data
-                    if let uiImage = UIImage(data: data) {
-                        avatarImage = Image(uiImage: uiImage)
-                        return
-                    }
+                .sheet(isPresented: $isPickerShown) {
+                    DocumentPicker(isShown: $isPickerShown, url: $fileurl)
                 }
-                
-                print("DEBUG: Failed to pick photo")
+                .padding()
+                .background {
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(Color.srSecondary.opacity(0.2))
+                }
+            }
+            .onChange(of: avatarItem) { _ in
+                Task {
+                    if let data = try? await avatarItem?.loadTransferable(type: Data.self) {
+                        avatarData = data
+                        if let uiImage = UIImage(data: data) {
+                            avatarImage = Image(uiImage: uiImage)
+                            return
+                        }
+                    }
+                    
+                    print("DEBUG: Failed to pick photo")
+                }
+            }
+            .padding(16)
+            .font(.system(size: 20, weight: .semibold))
+            .presentationDetents([.fraction(0.8)])
+            
+            if libraryViewModel.isLoading {
+                LoadingView()
             }
         }
-        .padding(16)
-        .font(.system(size: 20, weight: .semibold))
-        .presentationDetents([.fraction(0.8)])
     }
 
     var addToolBarItem: some ToolbarContent {

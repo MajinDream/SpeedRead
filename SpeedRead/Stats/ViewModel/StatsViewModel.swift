@@ -28,14 +28,22 @@ struct StatsModel: Codable {
     var weekDataSpeed: [StatPoint] {
         dataSpeed?.filter({
             Date().timeIntervalSince($0.dayDate) < 7 * 24 * 60 * 60
-        }).map({
+        })
+        .sorted(by: {
+            $0.dayDate < $1.dayDate
+        })
+        .map({
             StatPoint(mount: $0.dayDate.getFormattedDate(format: "E"), value: $0.speed ?? 0.0)
         }) ?? []
     }
     var weekDataComp: [StatPoint] {
         dataComp?.filter({
             Date().timeIntervalSince($0.dayDate) < 7 * 24 * 60 * 60
-        }).map({
+        })
+        .sorted(by: {
+            $0.dayDate < $1.dayDate
+        })
+        .map({
             StatPoint(mount: $0.dayDate.getFormattedDate(format: "E"), value: $0.comp ?? 0.0)
         }) ?? []
     }
@@ -58,14 +66,23 @@ struct StatsModel: Codable {
     var monthDataSpeed: [StatPoint] {
         dataSpeed?.filter({
             Date().timeIntervalSince($0.dayDate) < 30 * 7 * 24 * 60 * 60
-        }).map({
+        })
+        .sorted(by: {
+            $0.dayDate < $1.dayDate
+        })
+        .map({
             StatPoint(mount: $0.dayDate.getFormattedDate(format: "dd/MM"), value: $0.speed ?? 0.0)
         }) ?? []
     }
+
     var monthDataComp: [StatPoint] {
         dataComp?.filter({
             Date().timeIntervalSince($0.dayDate) < 30 * 7 * 24 * 60 * 60
-        }).map({
+        })
+        .sorted(by: {
+            $0.dayDate < $1.dayDate
+        })
+        .map({
             StatPoint(mount: $0.dayDate.getFormattedDate(format: "dd/MM"), value: $0.comp ?? 0.0)
         }) ?? []
     }
@@ -118,7 +135,9 @@ struct CompData: Codable, Identifiable {
     
     var dayDate: Date {
         guard let day else { return Date() }
-        return ISO8601DateFormatter().date(from: day) ?? Date()
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter.date(from: day) ?? Date()
     }
 }
 

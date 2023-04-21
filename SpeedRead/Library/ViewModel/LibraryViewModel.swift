@@ -68,8 +68,6 @@ final class LibraryViewModel: ObservableObject {
             imageFileName: "\(addedBook.title).jpg"
         )
         
-        print(String(data: addedBook.book, encoding: .utf8))
-        
         guard let requestMain = requestMain as? UploadFileRequest else { return }
         let request = requestMain.urlRequest
         
@@ -149,7 +147,7 @@ final class LibraryViewModel: ObservableObject {
                         )
                         
                         self.isLoading = false
-                        self.readingFetchSubscription?.cancel()
+//                        self.readingFetchSubscription?.cancel()
                         
                         print("DEBUG: Caching \(reading.title) is finished")
                     }

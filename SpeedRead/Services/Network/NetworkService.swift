@@ -43,6 +43,17 @@ class NetworkingManager {
         return output.data
     }
     
+    static func handleCompletion(completion: Subscribers.Completion<Error>) {
+        switch completion {
+        case .finished:
+            break
+        case .failure(let error):
+            print(error)
+        }
+    }
+    
+    
+    
     static func download(url: URL) -> AnyPublisher<Data, Error> {
         return URLSession.shared.dataTaskPublisher(for: url)
             .subscribe(on: DispatchQueue.global(qos: .default))
@@ -61,14 +72,6 @@ class NetworkingManager {
         return output.data
     }
     
-    static func handleCompletion(completion: Subscribers.Completion<Error>) {
-        switch completion {
-        case .finished:
-            break
-        case .failure(let error):
-            print(error)
-        }
-    }
 }
 
 

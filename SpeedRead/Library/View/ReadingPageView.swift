@@ -60,6 +60,12 @@ struct ReadingPageView: View {
         .navigationTitle(reading.title)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
+        .gesture(DragGesture(minimumDistance: 20, coordinateSpace: .global)
+                    .onEnded {
+                        $0.translation.width < 0
+                        ? goToPrevPage()
+                        : goToNextPage()
+                    })
         .onTapGesture(count: 2) { goBack() }
         .onTapGesture { pauseTimer() }
         .onAppear {
@@ -232,6 +238,21 @@ extension ReadingPageView {
         } else {
             currentPosition += 1
         }
+    }
+    
+    func goToNextPage() {
+        currentPage += 1
+        readingPageViewModel.scrollViewID = UUID()
+        words = readingPages?[currentPage] ?? ["Error"]
+        currentPosition = 0
+    }
+    
+    func goToPrevPage() {
+        guard currentPage != 0 else { return }
+        currentPage -= 1
+        readingPageViewModel.scrollViewID = UUID()
+        words = readingPages?[currentPage] ?? ["Error"]
+        currentPosition = 0
     }
     
     func goBack() {

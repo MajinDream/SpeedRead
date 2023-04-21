@@ -21,7 +21,7 @@ final class MnemonicsViewModel: ObservableObject {
     }
     
     private func fetchWordList() {
-        wordList = ["alpha", "beta", "gamma", "tetta", "omega", "cringe"]
+        wordList = ["dimple", "embark", "jovial", "flurry", "glisten", "hurtle", "knotty", "lagoon", "mumble", "nimble", "oasis", "paddle", "quaint", "ravage", "sketch", "tickle", "upbeat", "vortex", "wobble", "yonder", "zephyr", "acuity", "blithe", "clique", "dulcet", "epoch", "fervor", "gossam", "happen", "incite", "jockey", "kinema", "lucent", "morsel", "nuzzle", "offing", "peruse", "quench", "raunch", "scruff", "tangle", "uplift", "vandal", "whence", "yapock", "zinger", "analog", "blench", "cruxes", "drivel", "elicit", "flaunt", "gadget", "hearth", "ingest", "joggle", "kindle", "larder", "mizzle", "novice", "omened", "pebble", "quiche", "rancor", "stifle", "turgid", "unsung", "viable", "wicker", "youths", "zodiac", "abound", "brogue", "cortex", "dazzle", "esteem", "fondly", "gander", "herald", "invent", "jagged", "keenly", "longer", "mantra", "nudity", "omelet", "pursue", "quorum", "rafter", "saddle", "trifle", "umbral", "votive", "wombat", "yippie", "zither"]
     }
 
     func chooseWord() {

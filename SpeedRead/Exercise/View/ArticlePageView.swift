@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ArticlePageView: View {
     @EnvironmentObject var navigationViewModel: NavigationViewModel
+    @EnvironmentObject var settingsViewModel: SettingsViewModel
     let article: Article
     
     var body: some View {
@@ -19,6 +20,12 @@ struct ArticlePageView: View {
                 .padding(.vertical, 16)
             Text(.init(article.content ?? ""))
                 .padding(.horizontal, 10)
+                .font(
+                    settingsViewModel.selectedFont == .sfProDisplay
+                    ? .system(size: settingsViewModel.fontSize, weight: .regular)
+                    : .custom(settingsViewModel.selectedFont.name, size: settingsViewModel.fontSize)
+                )
+                
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
